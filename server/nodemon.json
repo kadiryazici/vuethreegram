@@ -1,0 +1,10 @@
+{
+   "ignore": ["dist/**/*", "node_modules/**/*"],
+   "exec": "npm run build:start",
+   "events": {
+      "restart": "kill-port  3000",
+      "crash": "kill-port 3000"
+   },
+   "watch": ["src/**/*.ts"],
+   "ext": ".ts"
+}
