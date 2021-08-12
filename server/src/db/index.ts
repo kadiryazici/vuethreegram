@@ -1,7 +1,6 @@
 import { join } from 'path';
 import { Low, JSONFile } from 'lowdb';
-import { defaults } from '@/constants';
-import { dirName } from '@/helpers';
+import { DatabaseDefaults } from '@/constants';
 import { App } from '@/types';
 
 const file = join(process.cwd(), 'prod/db.json');
@@ -10,7 +9,7 @@ const db = new Low(adapter);
 
 export const initDB = async () => {
    await db.read();
-   db.data ||= defaults;
+   db.data ||= DatabaseDefaults;
    db.write();
 };
 

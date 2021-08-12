@@ -3,7 +3,8 @@ import fastify from 'fastify';
 import fastifyStatic from 'fastify-static';
 
 import { join } from 'path';
-import { dirName } from './helpers';
+import { DefaultPort } from '@/constants';
+import { dirName } from '@/helpers';
 
 const server = fastify({ logger: true });
 
@@ -13,7 +14,7 @@ server.register(fastifyStatic, {
 });
 
 try {
-   await server.listen(3000);
+   await server.listen(process.env.PORT || DefaultPort);
 } catch (error) {
    server.log.error(error);
    process.exit(1);
