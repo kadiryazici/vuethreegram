@@ -4,14 +4,16 @@ import fastifyStatic from 'fastify-static';
 
 import { join } from 'path';
 import { DefaultPort } from '@/constants';
-import { dirName } from '@/helpers';
+import { defineRoutes } from './helpers/installRoutes';
 
 const server = fastify({ logger: true });
 
 server.register(fastifyStatic, {
    root: join(process.cwd(), 'prod/public'),
-   prefix: '/asset/'
+   prefix: '/public/'
 });
+
+defineRoutes(server);
 
 try {
    await server.listen(process.env.PORT || DefaultPort);
@@ -19,3 +21,5 @@ try {
    server.log.error(error);
    process.exit(1);
 }
+
+export type FastifyServer = typeof server;

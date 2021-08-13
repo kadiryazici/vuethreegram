@@ -1,3 +1,5 @@
+import { FastifyServer } from '.';
+
 declare global {
    namespace NodeJS {
       interface ProcessEnv {
@@ -23,5 +25,13 @@ export namespace App {
    export interface Database {
       posts: Post[];
       users: User[];
+   }
+}
+
+export namespace Http {
+   export type install = (server: FastifyServer, path: string) => any;
+   export interface InstallGlob {
+      default: { install: Http.install }[];
+      filenames: string[];
    }
 }

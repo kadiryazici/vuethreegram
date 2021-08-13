@@ -1,6 +1,9 @@
 import { defineConfig } from 'tsup';
+import EsbuildGlobPlugin from 'esbuild-plugin-import-glob';
+
 export const tsup = defineConfig({
    format: ['esm'],
    target: 'node16',
-   splitting: true
+   clean: true,
+   esbuildPlugins: [EsbuildGlobPlugin()]
 });

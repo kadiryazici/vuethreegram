@@ -1,6 +1,6 @@
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-export const dirName = () => {
+export function dirName() {
    return dirname(fileURLToPath(import.meta.url));
-};
+}

@@ -4,7 +4,7 @@
    "description": "",
    "main": "index.js",
    "scripts": {
-      "build": "rimraf dist && tsup  --ignore-watch 'src/' src/index.ts",
+      "build": "tsup  --ignore-watch 'src/' src/index.ts",
       "start": "node dist/index.js",
       "build:start": "npm run build && npm run start",
       "dev": "nodemon --config nodemon.json"
@@ -25,6 +25,7 @@
       "@types/jsonwebtoken": "^8.5.4",
       "@types/node": "^16.6.0",
       "@types/nodemon": "^1.19.1",
+      "esbuild-plugin-import-glob": "^0.1.1",
       "kill-port": "^1.6.1",
       "nodemon": "^2.0.12",
       "rimraf": "^3.0.2",
