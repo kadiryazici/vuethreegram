@@ -1,22 +1,24 @@
 import '@/init';
 import fastify from 'fastify';
-import fastifyStatic from 'fastify-static';
-
-import { join } from 'path';
+import chalk from 'chalk';
 import { DefaultPort } from '@/constants';
-import { defineRoutes } from './helpers/installRoutes';
+import { useRoutes } from '@/helpers/installRoutes';
+import { installModules } from '@/helpers/installModules';
 
-const server = fastify({ logger: true });
-
-server.register(fastifyStatic, {
-   root: join(process.cwd(), 'prod/public'),
-   prefix: '/public/'
+const server = fastify({
+   logger: true
 });
 
-defineRoutes(server);
+await installModules(server);
+await useRoutes(server);
 
 try {
-   await server.listen(process.env.PORT || DefaultPort);
+   const port = process.env.PORT || DefaultPort;
+   await server.listen(port);
+   const text =
+      chalk.magentaBright(`[${process.env.MODE.toUpperCase()}]`) +
+      chalk.cyan(` Server is up on port ${port}.`);
+   console.log(text);
 } catch (error) {
    server.log.error(error);
    process.exit(1);

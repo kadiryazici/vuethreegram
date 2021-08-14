@@ -1,0 +1,16 @@
+POST http://localhost:3000/api/signup
+Content-Type: application/json
+
+{
+   "username": "    ",
+   "password": 1325432353
+}
+
+###
+
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB1TmMxX0pOeFJwVV9aQ2l2eGFlUSIsImlhdCI6MTYyODg2NDk1MX0.wOPzfhiZtahISlPKuhwgy2_WbTujKds5gK6j9R0T9OM"
+}

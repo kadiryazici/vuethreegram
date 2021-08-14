@@ -1,6 +1,6 @@
 {
    "ignore": ["dist/**/*", "node_modules/**/*"],
-   "exec": "npm run build:start",
+   "exec": "npm run build:dev",
    "events": {
       "restart": "kill-port  3000",
       "crash": "kill-port 3000"

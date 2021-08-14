@@ -3,7 +3,7 @@ import { Low, JSONFile } from 'lowdb';
 import { DatabaseDefaults } from '@/constants';
 import { App } from '@/types';
 
-const file = join(process.cwd(), 'prod/db.json');
+const file = join(process.cwd(), `static/${process.env.MODE}/db.json`);
 const adapter = new JSONFile<App.Database>(file);
 const db = new Low(adapter);
 

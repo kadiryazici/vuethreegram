@@ -1,7 +1,22 @@
-import { Http } from '@/types';
+import { createJWT, verifyJWT } from '@/helpers/jwt';
+import { Api } from '@/types';
+import { FastifyRequest, FastifyReply } from 'fastify';
+import { nanoid } from 'nanoid';
 
-export const install: Http.install = (server, path) => {
-   server.get('/bruh', (request, reply) => {
-      reply.status(200).send(path);
-   });
+const Get = async (req: FastifyRequest, res: FastifyReply) => {
+   const token = (
+      req.body as {
+         token: string;
+      }
+   ).token;
+
+   const payload = await verifyJWT<{ id: string }>(
+      token,
+      process.env.JWT_SECRET
+   );
+   res.send(payload);
+};
+
+export const use: Api.use = async (server, path) => {
+   server.post(path, Get);
 };
