@@ -17,9 +17,7 @@ class AuthDTO implements Api.AuthBody {
    @TrimLength(Auth.username.min)
    @NoMultipleLength(' ', Auth.username.min)
    @IsNotEmpty()
-   @Transform(({ value }) => removeSpaceDuplications(value).trim(), {
-      toPlainOnly: true
-   })
+   @Transform(({ value }) => removeSpaceDuplications(value).trim())
    username!: string;
 
    @Length(Auth.password.min, Auth.password.max)
