@@ -9,7 +9,7 @@ export const DatabaseDefaults = {
 
 export const JWTConfig = {
    expires: 15
-};
+} as const;
 
 export const Auth = {
    username: {
@@ -20,7 +20,7 @@ export const Auth = {
       min: 6,
       max: 25
    }
-};
+} as const;
 
 export const DefaultPort = 3000;
 export const BcryptSalt = 10;
