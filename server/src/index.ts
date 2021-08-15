@@ -6,7 +6,14 @@ import { useRoutes } from '@/helpers/installRoutes';
 import { installModules } from '@/helpers/installModules';
 
 const server = fastify({
-   logger: true
+   logger: {
+      level: 'info',
+      prettyPrint: {
+         translateTime: 'dd.mm.yyyy hh:mm',
+         ignore: 'pid,hostname,reqId,responseTime,req,res',
+         messageFormat: '{msg} [id={reqId} {req.method} {req.url}]'
+      }
+   }
 });
 
 await installModules(server);

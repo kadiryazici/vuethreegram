@@ -1,9 +1,10 @@
+import { LoginSchema } from '@/api/login/schema';
 import { createJWT, verifyJWT } from '@/helpers/jwt';
 import { Api } from '@/types';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { nanoid } from 'nanoid';
 
-const Get = async (req: FastifyRequest, res: FastifyReply) => {
+const Post = async (req: FastifyRequest, res: FastifyReply) => {
    const token = (
       req.body as {
          token: string;
@@ -18,5 +19,5 @@ const Get = async (req: FastifyRequest, res: FastifyReply) => {
 };
 
 export const use: Api.use = async (server, path) => {
-   server.post(path, Get);
+   server.post(path, { schema: LoginSchema }, Post);
 };

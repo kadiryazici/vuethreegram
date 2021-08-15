@@ -9,7 +9,8 @@
       "start:dev": "cross-env MODE=dev node dist/index.js",
       "build:start": "npm run build && npm run start",
       "build:dev": "npm run build && npm run start:dev",
-      "dev": "nodemon --config nodemon.json"
+      "dev": "nodemon --config nodemon.json",
+      "test": "cross-env MODE=test node dist/index.js"
    },
    "type": "module",
    "keywords": [],
@@ -25,7 +26,8 @@
       "fastify-static": "^4.2.3",
       "jsonwebtoken": "^8.5.1",
       "lowdb": "^2.1.0",
-      "nanoid": "^3.1.24"
+      "nanoid": "^3.1.24",
+      "pino-pretty": "^5.1.3"
    },
    "devDependencies": {
       "@types/bcrypt": "^5.0.0",

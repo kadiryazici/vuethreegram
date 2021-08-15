@@ -5,5 +5,7 @@ export const tsup = defineConfig({
    format: ['esm'],
    target: 'node16',
    clean: true,
-   esbuildPlugins: [EsbuildGlobPlugin()]
+   esbuildPlugins: [EsbuildGlobPlugin()],
+   splitting: true,
+   minify: true
 });

@@ -1,31 +1,13 @@
 import { serializeUsername } from '@/helpers/user';
 import { Api } from '@/types';
-import { FastifyRequest, FastifyReply, FastifySchema } from 'fastify';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import bcrypt from 'bcrypt';
+import { PostSchema } from '@/api/signup/schema';
 
 export interface SignupBody {
    username: string;
    password: string;
 }
-
-const PostSchema: FastifySchema = {
-   body: {
-      type: 'object',
-      properties: {
-         username: {
-            type: 'string',
-            minLength: 3,
-            maxLength: 20
-         },
-         password: {
-            type: 'string',
-            minLength: 6,
-            maxLength: 20
-         }
-      },
-      required: ['username', 'password']
-   }
-};
 
 async function Post(req: FastifyRequest, res: FastifyReply) {
    let { password, username } = req.body as SignupBody;

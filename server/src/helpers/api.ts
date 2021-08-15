@@ -21,9 +21,7 @@ export function filePath2Path(str: string) {
 }
 
 function removeExtension(str: string) {
-   const arr = str.split('.');
-   arr.pop();
-   return arr.join('.');
+   return str.replace('.path.ts', '');
 }
 
 function removeIndexName(str: string) {
