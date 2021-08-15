@@ -5,14 +5,10 @@ export const PostSchema: FastifySchema = {
       type: 'object',
       properties: {
          username: {
-            type: 'string',
-            minLength: 3,
-            maxLength: 20
+            type: 'string'
          },
          password: {
-            type: 'string',
-            minLength: 6,
-            maxLength: 20
+            type: 'string'
          }
       },
       required: ['username', 'password']

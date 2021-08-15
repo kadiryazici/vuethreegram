@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import '@/init';
 import fastify from 'fastify';
 import chalk from 'chalk';

@@ -1,4 +1,4 @@
-import { LoginSchema } from '@/api/login/schema';
+import { PostSchema } from './login.schema';
 import { createJWT, verifyJWT } from '@/helpers/jwt';
 import { Api } from '@/types';
 import { FastifyRequest, FastifyReply } from 'fastify';
@@ -19,5 +19,5 @@ const Post = async (req: FastifyRequest, res: FastifyReply) => {
 };
 
 export const use: Api.use = async (server, path) => {
-   server.post(path, { schema: LoginSchema }, Post);
+   server.post(path, { schema: PostSchema }, Post);
 };

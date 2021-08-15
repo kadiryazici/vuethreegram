@@ -28,15 +28,3 @@ export async function verifyJWT<T extends object>(
    });
    return decoded;
 }
-
-export async function createRefreshToken(
-   payload: Record<string, any>,
-   options: SignOptions = {}
-) {
-   const token = await createJWT(
-      payload,
-      process.env.JWT_REFRESH_SECRET,
-      options
-   );
-   return token;
-}

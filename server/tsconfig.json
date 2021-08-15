@@ -9,6 +9,8 @@
       "target": "ESNext",
       "skipLibCheck": true,
       "esModuleInterop": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
       "paths": {
          "@/*": ["./src/*"]
       }

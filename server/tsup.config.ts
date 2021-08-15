@@ -1,5 +1,6 @@
 import { defineConfig } from 'tsup';
 import EsbuildGlobPlugin from 'esbuild-plugin-import-glob';
+import { esbuildDecorators } from '@anatine/esbuild-decorators';
 
 export const tsup = defineConfig({
    format: ['esm'],
@@ -7,5 +8,5 @@ export const tsup = defineConfig({
    clean: true,
    esbuildPlugins: [EsbuildGlobPlugin()],
    splitting: true,
-   minify: true
+   external: ['class-validator', 'reflect-metadata']
 });

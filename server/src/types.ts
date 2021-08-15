@@ -51,4 +51,9 @@ export namespace Api {
       default: { install?: Api.install; name: string }[];
       filenames: string[];
    }
+
+   export interface AuthBody {
+      username: string;
+      password: string;
+   }
 }

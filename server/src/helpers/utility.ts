@@ -23,3 +23,7 @@ import { fileURLToPath } from 'url';
 export function dirName() {
    return dirname(fileURLToPath(import.meta.url));
 }
+
+export function removeSpaceDuplications(str: string) {
+   return str.replace(/\s\s+/g, '');
+}
