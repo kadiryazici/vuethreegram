@@ -9,7 +9,7 @@
       "start:dev": "cross-env MODE=dev node dist/index.js",
       "build:start": "npm run build && npm run start",
       "build:dev": "npm run build && npm run start:dev",
-      "dev": "nodemon --config nodemon.json",
+      "dev": "nodemon --delay 2.5 --config nodemon.json",
       "test": "cross-env MODE=test node dist/index.js"
    },
    "type": "module",
