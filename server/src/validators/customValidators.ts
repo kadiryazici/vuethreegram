@@ -36,7 +36,7 @@ export function NoMultipleLength(
 ) {
    return function (object: Object, propertyName: string) {
       registerDecorator({
-         name: 'TrimLength',
+         name: 'NoMultipleLength',
          target: object.constructor,
          propertyName: propertyName,
          constraints: [char, min],
