@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import { DefaultPort } from '@/constants';
 import { useRoutes } from '@/helpers/installRoutes';
 import { installModules } from '@/helpers/installModules';
+import { prettyLog } from '@/helpers/prettyLog';
 
 const server = fastify({
    logger: {
@@ -23,10 +24,7 @@ await useRoutes(server);
 try {
    const port = process.env.PORT || DefaultPort;
    await server.listen(port);
-   const text =
-      chalk.magentaBright(`[${process.env.MODE.toUpperCase()}]`) +
-      chalk.cyan(` Server is up on port ${port}.`);
-   console.log(text);
+   prettyLog(process.env.MODE.toUpperCase(), `Server is up on port ${port}.`);
 } catch (error) {
    server.log.error(error);
    process.exit(1);
