@@ -7,10 +7,10 @@
       "build": "tsup  --ignore-watch 'src/' src/index.ts",
       "start": "cross-env MODE=prod node dist/index.js",
       "start:dev": "cross-env MODE=dev node dist/index.js",
+      "start:test": "cross-env MODE=test node dist/index.js",
       "build:start": "npm run build && npm run start",
       "build:dev": "npm run build && npm run start:dev",
-      "dev": "nodemon --delay 2.5 --config nodemon.json",
-      "test": "cross-env MODE=test node dist/index.js"
+      "dev": "nodemon --delay 2.5 --config nodemon.json"
    },
    "type": "module",
    "keywords": [],
@@ -21,11 +21,13 @@
       "chalk": "^4.1.2",
       "class-transformer": "^0.4.0",
       "class-validator": "^0.13.1",
+      "cookie": "^0.4.1",
       "cross-env": "^7.0.3",
       "dotenv": "^10.0.0",
       "fastify": "^3.20.1",
       "fastify-cors": "^6.0.2",
       "fastify-static": "^4.2.3",
+      "http-errors": "^1.8.0",
       "jsonwebtoken": "^8.5.1",
       "lowdb": "^2.1.0",
       "nanoid": "^3.1.24",
@@ -33,8 +35,9 @@
       "reflect-metadata": "^0.1.13"
    },
    "devDependencies": {
-      "@anatine/esbuild-decorators": "^0.2.17",
       "@types/bcrypt": "^5.0.0",
+      "@types/cookie": "^0.4.1",
+      "@types/http-errors": "^1.8.1",
       "@types/jsonwebtoken": "^8.5.4",
       "@types/node": "^16.6.0",
       "@types/nodemon": "^1.19.1",

@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { Transform, classToPlain } from 'class-transformer';
 import { removeSpaceDuplications } from '@/helpers/utility';
+import { serializeUsername } from '@/helpers/user';
 
 class AuthDTO implements Api.AuthBody {
    @IsString()
@@ -17,7 +18,7 @@ class AuthDTO implements Api.AuthBody {
    @TrimLength(Auth.username.min)
    @NoMultipleLength(' ', Auth.username.min)
    @IsNotEmpty()
-   @Transform(({ value }) => removeSpaceDuplications(value).trim())
+   @Transform(({ value }) => serializeUsername(value))
    username!: string;
 
    @Length(Auth.password.min, Auth.password.max)
@@ -32,7 +33,7 @@ export async function validateAuthBody(object: Api.AuthBody) {
    authDTO.password = object?.password;
    try {
       await validateOrReject(authDTO);
-      return classToPlain(authDTO);
+      return classToPlain(authDTO) as Api.AuthBody;
    } catch (error) {
       throw new Error(error);
    }

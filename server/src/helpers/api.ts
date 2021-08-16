@@ -1,11 +1,14 @@
 import { FilePathParameterRegex } from '@/constants';
 import { trimChars } from '@/helpers/utility';
 
+const pathStartsWith = '/routes';
+
 /**
  * Converts file path to http path
- * @example ```/api/[id]/index.ts``` --> `/api/:id/`
- * @example ```'api/user/[id].ts``` -->  ```/api/user/:id```
- * @example ```'api/user/[...].ts``` -->  ```/api/user/*```
+ * @example ```/routes/api/[id]/index.path.ts``` --> `/api/:id/`
+ * @example ```'/routes/api/user/[id].path.ts``` -->  ```/api/user/:id```
+ * @example ```'/routes/api/user/[...].path.ts``` -->  ```/api/user/*```
+ * @example ```'/routes/something.path.ts``` -->  ```/something```
  */
 export function filePath2Path(str: string) {
    str = removeExtension(str);
@@ -17,6 +20,9 @@ export function filePath2Path(str: string) {
       return `:${param}`;
    });
    str = trimChars(str, '.');
+
+   //path always starts with /routes, I should delete it.
+   str = str.slice(pathStartsWith.length, str.length);
    return str;
 }
 

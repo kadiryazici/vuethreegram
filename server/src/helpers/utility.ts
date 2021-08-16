@@ -25,5 +25,9 @@ export function dirName() {
 }
 
 export function removeSpaceDuplications(str: string) {
-   return str.replace(/\s\s+/g, '');
+   return str.replace(/\s\s+/g, ' ');
+}
+
+export function getTimeWithoutTimezone(date: Date) {
+   return date.getTime() + date.getTimezoneOffset() * 60 * 1000;
 }

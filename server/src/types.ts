@@ -25,6 +25,7 @@ export namespace App {
       id: string;
       password: string;
       createdAt: number;
+      username: string;
       posts: Post[];
    }
 

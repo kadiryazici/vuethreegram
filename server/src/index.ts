@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import '@/init';
 import fastify from 'fastify';
-import chalk from 'chalk';
 import { DefaultPort } from '@/constants';
 import { useRoutes } from '@/helpers/installRoutes';
 import { installModules } from '@/helpers/installModules';

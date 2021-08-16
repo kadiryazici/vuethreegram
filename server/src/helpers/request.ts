@@ -1,5 +1,7 @@
 import { FastifyReply } from 'fastify';
 
-const Success = (reply: FastifyReply) => {
-   reply.statusCode = 200;
+export const Success = (message = 'successful') => {
+   return {
+      message
+   } as const;
 };

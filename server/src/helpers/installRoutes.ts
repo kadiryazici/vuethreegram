@@ -4,7 +4,7 @@ import { Api } from '@/types';
 import chalk from 'chalk';
 import { FastifyServer } from '..';
 // @ts-expect-error
-import * as glob from '../api/**/*.path.ts';
+import * as glob from '../routes/**/*.path.ts';
 
 const { default: routes, filenames } = glob as Api.InstallGlob;
 

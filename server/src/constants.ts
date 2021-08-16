@@ -8,7 +8,12 @@ export const DatabaseDefaults = {
 } as App.Database;
 
 export const JWTConfig = {
-   expires: 15
+   jwtCookieName: 'jwt',
+   refreshCookieName: 'ref_token',
+   expires: '25m',
+   refresh: {
+      expires: '7d'
+   }
 } as const;
 
 export const Auth = {
