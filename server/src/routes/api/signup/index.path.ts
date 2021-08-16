@@ -15,6 +15,10 @@ async function Post(req: FastifyRequest, res: FastifyReply) {
       throw new httpErrors.BadRequest('invalid request body');
    });
 
+   console.log({
+      body
+   });
+
    const db = useDB();
    const user = await doesUserExists(body.username);
    if (user) throw new httpErrors.Conflict('user already exists');

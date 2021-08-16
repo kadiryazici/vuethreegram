@@ -2,19 +2,23 @@ import 'reflect-metadata';
 import '@/init';
 import fastify from 'fastify';
 import { DefaultPort } from '@/constants';
-import { useRoutes } from '@/helpers/installRoutes';
+import { useRoutes } from '@/helpers/useRoutes';
 import { installModules } from '@/helpers/installModules';
 import { prettyLog } from '@/helpers/prettyLog';
+export { createCSRFToken } from '@/guards/csrfGuard';
 
 const server = fastify({
-   logger: {
-      level: 'info',
-      prettyPrint: {
-         translateTime: 'dd.mm.yyyy hh:mm',
-         ignore: 'pid,hostname,reqId,responseTime,req,res',
-         messageFormat: '{msg} [id={reqId} {req.method} {req.url}]'
-      }
-   }
+   logger:
+      process.env.MODE === 'test'
+         ? false
+         : {
+              level: 'info',
+              prettyPrint: {
+                 translateTime: 'dd.mm.yyyy hh:mm',
+                 ignore: 'pid,hostname,reqId,responseTime,req,res',
+                 messageFormat: '{msg} [id={reqId} {req.method} {req.url}]'
+              }
+           }
 });
 
 await installModules(server);
@@ -30,3 +34,8 @@ try {
 }
 
 export type FastifyServer = typeof server;
+
+if (process.env.MODE === 'test') {
+   const runner = await import('@/tests/index.test');
+   runner.runTests(server);
+}

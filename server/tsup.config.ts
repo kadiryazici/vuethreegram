@@ -6,5 +6,7 @@ export const tsup = defineConfig({
    target: 'node16',
    clean: true,
    esbuildPlugins: [EsbuildGlobPlugin()],
-   splitting: true
+   splitting: true,
+   dts: true,
+   external: ['tap']
 });
