@@ -35,7 +35,7 @@ async function Post(req: FastifyRequest, res: FastifyReply) {
       password: passwordHash
    };
    db.data?.users.push(userData);
-   db.write();
+   await db.write();
 
    return {
       message: 'user has been created'

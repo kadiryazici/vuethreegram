@@ -12,17 +12,22 @@ export async function useAuthGuard(
 ) {
    if (!req.headers.cookie) throw new httpErrors.BadRequest('cookies needed');
    const cookies = cookie.parse(req.headers.cookie);
-   await validateAuth(
-      {
-         [JWTConfig.jwtCookieName]: cookies[JWTConfig.jwtCookieName],
-         [JWTConfig.refreshCookieName]: cookies[JWTConfig.refreshCookieName]
-      },
-      validateRefresh
-   );
 
-   const payload = verifyJWT<Api.UserJWTPayload>(
+   const tokenPayload: Api.TokenPayload = {
+      [JWTConfig.jwtCookieName]: cookies[JWTConfig.jwtCookieName],
+      [JWTConfig.refreshCookieName]: cookies[JWTConfig.refreshCookieName]
+   };
+
+   await validateAuth(tokenPayload, validateRefresh);
+
+   const jwtPayload = await verifyJWT<Api.UserJWTPayload>(
       cookies[JWTConfig.jwtCookieName],
       process.env.JWT_SECRET
    );
+
+   const payload: Api.TokenPayload & Api.UserJWTPayload = {
+      id: jwtPayload.id,
+      ...tokenPayload
+   };
    return payload;
 }

@@ -53,7 +53,7 @@ const Post = async (req: FastifyRequest, res: FastifyReply) => {
    {
       const db = useDB();
       db.data?.refreshTokens.push(refreshToken);
-      db.write();
+      await db.write();
    }
 
    res.header('Set-Cookie', jwtCookie);

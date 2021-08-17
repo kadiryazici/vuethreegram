@@ -6,6 +6,7 @@ import { Api } from '@/types';
 import { FastifyRequest, FastifyReply, FastifySchema } from 'fastify';
 import cookie, { CookieSerializeOptions } from 'cookie';
 import { JWTConfig } from '@/constants';
+import { useDB } from '@/db';
 
 const cookieSettings: CookieSerializeOptions = {
    httpOnly: true,
@@ -14,7 +15,8 @@ const cookieSettings: CookieSerializeOptions = {
 
 const Post = async (req: FastifyRequest, reply: FastifyReply) => {
    await useCsrfGuard(req);
-   const { id } = await useAuthGuard(req, true);
+   const { id, ref_token } = await useAuthGuard(req, true);
+   const db = useDB();
 
    const newJWT = await createJWT({ id }, process.env.JWT_SECRET);
    const newRefreshToken = await createJWT(
@@ -32,6 +34,17 @@ const Post = async (req: FastifyRequest, reply: FastifyReply) => {
       newRefreshToken,
       cookieSettings
    );
+
+   db.data!.refreshTokens.push(newRefreshToken);
+   await db.write();
+
+   const filteredRefreshTokens = db.data?.refreshTokens.filter(
+      (token) => token !== ref_token
+   );
+   if (filteredRefreshTokens) {
+      db.data!.refreshTokens = filteredRefreshTokens;
+      await db.write();
+   }
 
    reply.header('Set-Cookie', jwtCookie);
    reply.header('Set-Cookie', refreshCookie);
