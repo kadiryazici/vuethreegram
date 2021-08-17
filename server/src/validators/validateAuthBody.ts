@@ -5,11 +5,9 @@ import {
    IsNotEmpty,
    IsString,
    Length,
-   validateOrReject,
-   isNotEmpty
+   validateOrReject
 } from 'class-validator';
 import { Transform, classToPlain } from 'class-transformer';
-import { removeSpaceDuplications } from '@/helpers/utility';
 import { serializeUsername } from '@/helpers/user';
 
 class AuthDTO implements Api.AuthBody {

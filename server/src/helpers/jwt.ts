@@ -1,4 +1,5 @@
 import { JWTConfig } from '@/constants';
+import { Api } from '@/types';
 import jwt, { SignOptions, JwtPayload, verify } from 'jsonwebtoken';
 
 export async function createJWT(
@@ -36,8 +37,19 @@ export async function createAuthToken(userID: string) {
    });
 }
 
+export async function verifyAuthToken(token: string) {
+   return await verifyJWT<Api.UserJWTPayload>(token, process.env.JWT_SECRET);
+}
+
 export async function createRefreshToken(userID: string) {
    return await createJWT({ id: userID }, process.env.JWT_REFRESH_SECRET, {
       expiresIn: JWTConfig.refresh.expires
    });
+}
+
+export async function verifyRefreshToken(token: string) {
+   return await verifyJWT<Api.UserJWTPayload>(
+      token,
+      process.env.JWT_REFRESH_SECRET
+   );
 }

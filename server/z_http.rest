@@ -17,4 +17,8 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/api/csrf
+POST http://localhost:3000/api/refresh
+X-CSRF-Token: DMGbFNJc-HywNscB89IhPRB0NNV9lTw_etGU
+Cookie: ""
+
+###

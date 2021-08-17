@@ -1,4 +1,3 @@
-import { serializeUsername } from '@/helpers/user';
 import { Api, App } from '@/types';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import bcrypt from 'bcrypt';
@@ -13,10 +12,6 @@ import httpErrors from 'http-errors';
 async function Post(req: FastifyRequest, res: FastifyReply) {
    const body = await validateAuthBody(req.body as Api.AuthBody).catch(() => {
       throw new httpErrors.BadRequest('invalid request body');
-   });
-
-   console.log({
-      body
    });
 
    const db = useDB();

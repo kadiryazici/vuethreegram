@@ -1,3 +1,4 @@
+import { verifyJWT } from '@/helpers/jwt';
 import {
    registerDecorator,
    ValidationArguments,
@@ -50,6 +51,34 @@ export function NoMultipleLength(
                value = value.replace(reg, char);
 
                return value.length >= min;
+            }
+         }
+      });
+   };
+}
+
+export function IsTokenViable(
+   secret: string,
+   validationOptions?: ValidationOptions
+) {
+   return function (object: Object, propertyName: string) {
+      registerDecorator({
+         name: 'IsTokenViable',
+         target: object.constructor,
+         propertyName: propertyName,
+         constraints: [secret],
+         options: validationOptions,
+         validator: {
+            async validate(value: string, args: ValidationArguments) {
+               if (typeof value !== 'string') return false;
+               let [secret] = args.constraints as [string];
+
+               try {
+                  await verifyJWT(value, secret);
+                  return true;
+               } catch (error) {
+                  return false;
+               }
             }
          }
       });

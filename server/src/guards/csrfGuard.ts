@@ -2,7 +2,7 @@ import Csrf from 'csrf';
 import { FastifyRequest } from 'fastify';
 import httpErrors from 'http-errors';
 
-const throwFN = () => new httpErrors.BadRequest('invalid csrf token 1');
+const throwFN = () => new httpErrors.BadRequest('invalid csrf token');
 
 const tokens = new Csrf();
 const secret = tokens.secretSync();

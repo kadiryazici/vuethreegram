@@ -34,8 +34,3 @@ try {
 }
 
 export type FastifyServer = typeof server;
-
-if (process.env.MODE === 'test') {
-   const runner = await import('@/tests/index.test');
-   runner.runTests(server);
-}

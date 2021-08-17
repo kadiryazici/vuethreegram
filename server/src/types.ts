@@ -1,4 +1,5 @@
 import { FastifyServer } from '.';
+import { JWTConfig } from '@/constants';
 
 declare global {
    namespace NodeJS {
@@ -29,10 +30,6 @@ export namespace App {
       posts: Post[];
    }
 
-   export interface UserPayload {
-      id: User['id'];
-   }
-
    export interface Database {
       posts: Post[];
       users: User[];
@@ -48,6 +45,9 @@ export namespace Api {
       default: { use?: Api.use }[];
       filenames: string[];
    }
+   export interface UserJWTPayload {
+      id: App.User['id'];
+   }
 
    export type install = ((server: FastifyServer) => Promise<any>) | undefined;
    export interface ModuleGlob {
@@ -59,4 +59,9 @@ export namespace Api {
       username: string;
       password: string;
    }
+
+   export type TokenPayload = {
+      [JWTConfig.refreshCookieName]?: string;
+      [JWTConfig.jwtCookieName]: string;
+   };
 }
