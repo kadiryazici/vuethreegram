@@ -25,7 +25,7 @@ export async function validateAuth(
    if (validateRefresh) {
       const db = useDB();
       const isValidRefreshToken = db.data?.refreshTokens.includes(
-         payload.ref_token || '__qq__xx__'
+         payload.ref_token ?? 'bruhmoment'
       );
       if (!isValidRefreshToken) {
          throw new httpErrors.BadRequest('invalid refresh token');
@@ -34,7 +34,7 @@ export async function validateAuth(
    }
 
    dto[JWTConfig.jwtCookieName] = payload.jwt;
-   await validateOrReject(dto).catch((err) => {
+   await validateOrReject(dto).catch(() => {
       throw new httpErrors.Unauthorized('user login needed');
    });
 }

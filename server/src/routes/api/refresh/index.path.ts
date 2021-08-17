@@ -7,6 +7,7 @@ import { FastifyRequest, FastifyReply, FastifySchema } from 'fastify';
 import cookie, { CookieSerializeOptions } from 'cookie';
 import { JWTConfig } from '@/constants';
 import { useDB } from '@/db';
+import { removeRefreshTokenFromDB } from '@/helpers/db';
 
 const cookieSettings: CookieSerializeOptions = {
    httpOnly: true,
@@ -38,13 +39,7 @@ const Post = async (req: FastifyRequest, reply: FastifyReply) => {
    db.data!.refreshTokens.push(newRefreshToken);
    await db.write();
 
-   const filteredRefreshTokens = db.data?.refreshTokens.filter(
-      (token) => token !== ref_token
-   );
-   if (filteredRefreshTokens) {
-      db.data!.refreshTokens = filteredRefreshTokens;
-      await db.write();
-   }
+   await removeRefreshTokenFromDB(ref_token ?? 'qwe');
 
    reply.header('Set-Cookie', jwtCookie);
    reply.header('Set-Cookie', refreshCookie);

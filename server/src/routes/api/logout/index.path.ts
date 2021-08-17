@@ -6,6 +6,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import cookie, { CookieSerializeOptions } from 'cookie';
 import { JWTConfig } from '@/constants';
 import { useDB } from '@/db';
+import { removeRefreshTokenFromDB } from '@/helpers/db';
 
 const Settings: CookieSerializeOptions = {
    maxAge: 1
@@ -26,14 +27,10 @@ const Post = async (req: FastifyRequest, reply: FastifyReply) => {
       Settings
    );
 
-   const db = useDB();
-   const filteredRefreshTokens = db.data?.refreshTokens.filter(
-      (token) => token !== ref_token
-   );
-   if (filteredRefreshTokens) {
-      db.data!.refreshTokens = filteredRefreshTokens;
-      await db.write();
-   }
+   console.log({
+      ref_token
+   });
+   await removeRefreshTokenFromDB(ref_token ?? 'qwe');
 
    reply.header('Set-Cookie', deleteJWTCookie);
    reply.header('Set-Cookie', deleteRefreshTokenCookie);
