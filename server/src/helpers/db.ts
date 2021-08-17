@@ -17,11 +17,8 @@ export async function removeRefreshTokenFromDB(token: string) {
       throw 'db is null';
    }
    const { refreshTokens } = db.data;
-   if (refreshTokens.length > 1) {
-      const tokenIndex = refreshTokens.findIndex((t) => t === token);
-      refreshTokens[tokenIndex] = refreshTokens.pop()!;
-   } else {
-      refreshTokens.pop();
-   }
+   const tokenIndex = refreshTokens.findIndex((t) => t === token);
+   refreshTokens[tokenIndex] = refreshTokens[refreshTokens.length - 1];
+   refreshTokens.pop();
    await db.write();
 }
