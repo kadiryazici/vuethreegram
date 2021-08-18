@@ -1,5 +1,7 @@
 import App from '/src/App.vue';
 
+import 'virtual:windi.css';
+
 import { viteSSR } from 'vite-ssr/vue';
 import routes from 'virtual:generated-pages';
 

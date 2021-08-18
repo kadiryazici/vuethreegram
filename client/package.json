@@ -1,9 +1,15 @@
 {
    "name": "vuegram",
+   "scripts": {
+      "dev": "vite-ssr --open",
+      "build": "vite-ssr build && bash scripts/moveDist.sh"
+   },
    "dependencies": {
+      "@types/formdata": "^0.10.1",
       "@vue/server-renderer": "^3.2.4",
       "@vueuse/core": "^6.0.0",
       "@vueuse/head": "^0.6.0",
+      "axios": "^0.21.1",
       "node-fetch": "^2.6.1",
       "pinia": "^2.0.0-rc.4",
       "vite-ssr-middleware": "^0.1.8",
@@ -11,6 +17,7 @@
       "vue-router": "^4.0.11"
    },
    "devDependencies": {
+      "@iconify/json": "^1.1.389",
       "@types/node-fetch": "^2.5.12",
       "@vitejs/plugin-vue": "^1.4.0",
       "@vitejs/plugin-vue-jsx": "^1.1.7",
@@ -18,9 +25,11 @@
       "sass": "^1.38.0",
       "typescript": "^4.3.5",
       "vite": "^2.5.0",
+      "vite-plugin-icons": "^0.6.5",
       "vite-plugin-pages": "^0.17.3",
       "vite-plugin-windicss": "^1.2.7",
       "vite-ssr": "^0.12.1",
+      "vue-tsc": "^0.2.3",
       "windicss": "^3.1.7"
    }
 }
