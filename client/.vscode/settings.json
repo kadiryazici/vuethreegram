@@ -1,5 +1,3 @@
 {
-   "volar.tsPlugin": true,
-   "scss.lint.unknownAtRules": "ignore",
-   "css.lint.unknownAtRules": "ignore"
+   "git.ignoreLimitWarning": true
 }
