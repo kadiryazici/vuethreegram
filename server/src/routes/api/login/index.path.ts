@@ -36,12 +36,13 @@ const Post = async (req: FastifyRequest, res: FastifyReply) => {
    const tokenError = () => {
       throw new httpErrors.InternalServerError(unexpectedError);
    };
-   const jwt = await createAuthToken(user.id).catch(tokenError);
+   const jwt = await createAuthToken(user.id, user.username).catch(tokenError);
    const refreshToken = await createRefreshToken(user.id).catch(tokenError);
 
    const settings: CookieSerializeOptions = {
       httpOnly: true,
-      sameSite: 'strict'
+      sameSite: 'none',
+      secure: true
    };
    const jwtCookie = cookie.serialize(JWTConfig.jwtCookieName, jwt, settings);
    const refreshCookie = cookie.serialize(

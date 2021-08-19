@@ -4,9 +4,15 @@ import { Api } from '@/types';
 
 export const name = 'FastifyStatic';
 
-export const install: Api.install = async (fastify) => {
-   fastify.register(fastifyStatic, {
+export const install: Api.install = async (server) => {
+   await server.register(fastifyStatic, {
       root: join(process.cwd(), `static/${process.env.MODE}/public`),
-      prefix: '/public/'
+      prefix: '/public/',
+      decorateReply: false
+   });
+   await server.register(fastifyStatic, {
+      root: join(process.cwd(), `clientfiles/public/assets`),
+      prefix: '/assets/',
+      decorateReply: false
    });
 };

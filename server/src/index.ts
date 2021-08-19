@@ -5,7 +5,6 @@ import { DefaultPort } from '@/constants';
 import { useRoutes } from '@/helpers/useRoutes';
 import { installModules } from '@/helpers/installModules';
 import { prettyLog } from '@/helpers/prettyLog';
-export { createCSRFToken } from '@/guards/csrfGuard';
 
 const server = fastify({
    logger:

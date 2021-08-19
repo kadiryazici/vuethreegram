@@ -31,8 +31,8 @@ export async function verifyJWT<T extends object>(
    return decoded;
 }
 
-export async function createAuthToken(userID: string) {
-   return await createJWT({ id: userID }, process.env.JWT_SECRET, {
+export async function createAuthToken(userID: string, username: string) {
+   return await createJWT({ id: userID, username }, process.env.JWT_SECRET, {
       expiresIn: JWTConfig.expires
    });
 }

@@ -7,6 +7,14 @@ export const tsup = defineConfig({
    clean: true,
    esbuildPlugins: [EsbuildGlobPlugin()],
    splitting: true,
-   dts: true,
-   external: ['tap']
+   external: [
+      'tap',
+      'vue',
+      '@vue/server-renderer',
+      'axios',
+      'vue-router',
+      'pinia',
+      '@vueuse/head',
+      '@vueuse/core'
+   ]
 });

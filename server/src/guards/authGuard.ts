@@ -27,6 +27,7 @@ export async function useAuthGuard(
 
    const payload: Api.TokenPayload & Api.UserJWTPayload = {
       id: jwtPayload.id,
+      username: jwtPayload.username,
       ...tokenPayload
    };
    return payload;

@@ -12,13 +12,28 @@ declare global {
    }
 }
 
+declare module 'fastify' {
+   export interface FastifyRequest {
+      files: Record<
+         string,
+         {
+            fieldname: string;
+            originalname: string;
+            encoding: string;
+            mimetype: string;
+            buffer: Buffer;
+            size: number;
+         }[]
+      >;
+   }
+}
+
 export namespace App {
    export interface Post {
       id: string;
+      username: string;
+      content: string;
       image: string;
-      /**
-       * as miliseconds
-       */
       createDate: number;
    }
 
@@ -27,7 +42,7 @@ export namespace App {
       password: string;
       createdAt: number;
       username: string;
-      posts: Post[];
+      posts: Post['id'][];
    }
 
    export interface Database {
@@ -47,6 +62,7 @@ export namespace Api {
    }
    export interface UserJWTPayload {
       id: App.User['id'];
+      username: App.User['username'];
    }
 
    export type install = ((server: FastifyServer) => Promise<any>) | undefined;
