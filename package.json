@@ -1,7 +1,7 @@
 {
    "name": "vuegram",
    "scripts": {
-      "dev": "tsc-watch --onCompilationStarted \"rimraf prod\" --onSuccess \"cross-env MODE=dev node ./prod/index.js\"",
+      "dev": "tsc-watch --onSuccess \"cross-env MODE=dev node ./prod/index.js\"",
       "start": "cross-env MODE=prod node ./prod/index.js",
       "build": "rimraf prod && tsc && cd ./client && npm run build:client && npm run move",
       "build:client": "cd ./client && rimraf dist && vite-ssr build",
@@ -14,8 +14,11 @@
       "@vueuse/head": "^0.6.0",
       "axios": "^0.21.1",
       "chalk": "^4.1.2",
+      "fast-glob": "^3.2.7",
       "koa": "^2.13.1",
       "koa-connect": "^2.1.0",
+      "koa-mount": "^4.0.0",
+      "koa-static": "^5.0.0",
       "node-fetch": "^2.6.1",
       "pinia": "^2.0.0-rc.4",
       "vite-ssr-middleware": "^0.1.8",
@@ -25,6 +28,8 @@
    "devDependencies": {
       "@iconify/json": "^1.1.389",
       "@types/koa": "^2.13.4",
+      "@types/koa-mount": "^4.0.0",
+      "@types/koa-static": "^4.0.2",
       "@types/koa__router": "^8.0.7",
       "@types/node-fetch": "^2.5.12",
       "@vitejs/plugin-vue": "^1.4.0",

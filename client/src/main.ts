@@ -3,7 +3,6 @@ import App from '/src/App.vue';
 import 'virtual:windi.css';
 
 import { viteSSR } from 'vite-ssr/vue';
-import { createSsrServer } from 'vite-ssr/dev';
 import routes from 'virtual:generated-pages';
 
 import { createPinia } from 'pinia';

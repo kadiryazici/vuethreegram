@@ -4,22 +4,33 @@ import c2k from 'koa-connect';
 import { createSsrServer } from 'vite-ssr/dev';
 import path from 'node:path';
 import dotenv from 'dotenv';
+import fg from 'fast-glob';
+import { initClient } from './inits/initClient';
+import Router from '@koa/router';
+import { filePath2Path } from './uilts/filePath2Path';
+import { KoaServer } from './types';
+
 dotenv.config();
-// const router = new Router();
+const router = new Router();
+const app = new Koa();
+
+export type Server = typeof app;
+export type AppRouter = typeof router;
 
 async function createServer() {
-   const app = new Koa();
-   const viteServer = await createSsrServer({
-      server: {
-         middlewareMode: 'ssr'
-      },
-      root: path.resolve(process.cwd(), './client')
-   });
-   viteServer.middlewares;
-   app.use(c2k(viteServer.middlewares));
-   // app.use(async (ctx) => {});
-   app.listen(7000, () => {
-      console.log('App is up 3000');
+   // auto importing routes
+   const entries = await fg('./routes/**/*.path.js', { cwd: __dirname });
+   for (const path of entries) {
+      const route = filePath2Path(path);
+      const { setRoute }: KoaServer.PathFile = await import(path);
+      await setRoute(app, router, route);
+   }
+
+   app.use(router.routes()).use(router.allowedMethods());
+   const port = process.env.PORT || 3000;
+   app.listen(port, () => {
+      console.log(`App is up on ${port}`);
    });
 }
 createServer();
+export default app.callback();
