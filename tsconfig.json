@@ -1,0 +1,16 @@
+{
+   "compilerOptions": {
+      "outDir": "./prod",
+      "target": "ES2020",
+      "module": "commonjs",
+      "lib": ["ES2020"],
+      "moduleResolution": "Node",
+      "strict": true,
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true
+   },
+   "include": ["src/**/*"],
+   "exclude": ["client", "dist", "scripts", ".vscode", "node_modules"]
+}

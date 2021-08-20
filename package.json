@@ -1,15 +1,21 @@
 {
    "name": "vuegram",
    "scripts": {
-      "dev": "vite-ssr --open",
-      "build": "vite-ssr build && bash scripts/moveDist.sh"
+      "dev": "tsc-watch --onCompilationStarted \"rimraf prod\" --onSuccess \"cross-env MODE=dev node ./prod/index.js\"",
+      "start": "cross-env MODE=prod node ./prod/index.js",
+      "build": "rimraf prod && tsc && cd ./client && npm run build:client && npm run move",
+      "build:client": "cd ./client && rimraf dist && vite-ssr build",
+      "move": "bash scripts/moveDist.sh"
    },
    "dependencies": {
-      "@types/formdata": "^0.10.1",
+      "@koa/router": "^10.1.0",
       "@vue/server-renderer": "^3.2.4",
       "@vueuse/core": "^6.0.0",
       "@vueuse/head": "^0.6.0",
       "axios": "^0.21.1",
+      "chalk": "^4.1.2",
+      "koa": "^2.13.1",
+      "koa-connect": "^2.1.0",
       "node-fetch": "^2.6.1",
       "pinia": "^2.0.0-rc.4",
       "vite-ssr-middleware": "^0.1.8",
@@ -18,11 +24,17 @@
    },
    "devDependencies": {
       "@iconify/json": "^1.1.389",
+      "@types/koa": "^2.13.4",
+      "@types/koa__router": "^8.0.7",
       "@types/node-fetch": "^2.5.12",
       "@vitejs/plugin-vue": "^1.4.0",
       "@vitejs/plugin-vue-jsx": "^1.1.7",
       "@vue/compiler-sfc": "^3.2.4",
+      "cross-env": "^7.0.3",
+      "dotenv": "^10.0.0",
+      "rimraf": "^3.0.2",
       "sass": "^1.38.0",
+      "tsc-watch": "^4.5.0",
       "typescript": "^4.3.5",
       "vite": "^2.5.0",
       "vite-plugin-icons": "^0.6.5",
