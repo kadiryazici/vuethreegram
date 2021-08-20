@@ -1,13 +1,8 @@
 import { createSsrServer } from 'vite-ssr/dev';
 import path from 'node:path';
-import c2k from 'koa-connect';
-import { AppRouter, Server } from '../..';
-import serve from 'koa-static';
-import mount from 'koa-mount';
-import Koa from 'koa';
-import Router from '@koa/router';
 import type { OutgoingHttpHeaders, OutgoingHttpHeader } from 'http';
-import { KoaServer } from '../../types';
+import { ExpressServer } from '../../types';
+import express, { Request, Response } from 'express';
 
 interface ServerPackageJson {
    type: string;
@@ -24,9 +19,8 @@ type Renderer = {
          manifest: SSRManifest;
          preload: boolean;
          initialState: Record<string, any>;
-         request: any;
-         response: any;
-         ctx: Koa.ParameterizedContext<any, Router.RouterParamContext<any, {}>, any>;
+         request: Request;
+         response: Response;
       }>
    ) => Promise<{
       html: string;
@@ -36,28 +30,28 @@ type Renderer = {
    }>;
 };
 
-export const setRoute: KoaServer.SetRoute = async (app, router, routePath) => {
+export const setRoute: ExpressServer.SetRoute = async (app, routePath) => {
    if (process.env.MODE === 'prod') {
       const assetsPath = path.join(process.cwd() + '/prod/client/assets');
       //@ts-ignore
-      const manifest: SSRManifest = await import('../client/server/ssr-manifest.json');
+      const manifest: SSRManifest = await import('../../client/server/ssr-manifest.json');
       // @ts-ignore
-      const { default: renderer }: Renderer = await import('../client/server/main.js');
-      app.use(mount('/assets', serve(assetsPath)));
+      const { default: renderer }: Renderer = await import('../../client/server/main.js');
+      app.use('/assets', express.static(assetsPath));
 
-      router.get(routePath, async (ctx) => {
-         const url = `${ctx.protocol}://${ctx.host}${ctx.originalUrl}`;
+      app.get(routePath, async (request, response) => {
+         const url = `${request.protocol}://${request.hostname}${request.originalUrl}`;
          try {
             const { html } = await renderer(url, {
-               ctx,
                preload: true,
-               manifest
+               manifest,
+               request,
+               response
             });
-            ctx.type = 'html';
-            ctx.body = html;
+            response.send(html);
          } catch (err) {
             console.log(err);
-            ctx.throw('an error happened while rendering page');
+            response.status(500).send('Server Error');
          }
       });
 
@@ -71,6 +65,6 @@ export const setRoute: KoaServer.SetRoute = async (app, router, routePath) => {
       },
       root: path.resolve(process.cwd(), './client')
    });
-   viteServer.middlewares;
-   app.use(c2k(viteServer.middlewares));
+
+   app.use(viteServer.middlewares);
 };

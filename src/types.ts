@@ -1,4 +1,4 @@
-import { AppRouter, Server } from '.';
+import { Server } from '.';
 
 declare global {
    namespace NodeJS {
@@ -11,10 +11,10 @@ declare global {
    }
 }
 
-export namespace KoaServer {
+export namespace ExpressServer {
    export type app = Server;
 
-   export type SetRoute = (koa: Server, router: AppRouter, path: string) => Promise<void>;
+   export type SetRoute = (app: Server, path: string) => Promise<void>;
    export type PathFile = {
       setRoute: SetRoute;
    };

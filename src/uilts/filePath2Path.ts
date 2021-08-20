@@ -7,7 +7,7 @@ const pathStartsWith = './routes';
  * Converts file path to http path
  * @example ```/routes/api/[id]/index.path.ts``` --> `/api/:id/`
  * @example ```'/routes/api/user/[id].path.ts``` -->  ```/api/user/:id```
- * @example ```'/routes/api/user/[...].path.ts``` -->  ```/api/user/*```
+ * @example ```'/routes/api/user/[...].path.ts``` -->  ```/api/user/(.*)```
  * @example ```'/routes/something.path.ts``` -->  ```/something```
  */
 export function filePath2Path(str: string) {
@@ -15,7 +15,7 @@ export function filePath2Path(str: string) {
    str = removeIndexName(str);
    str = str.replace(PathParameterRegex, (target, param: string) => {
       if (param.startsWith('...')) {
-         return '(.*)';
+         return '*';
       }
       return `:${param}`;
    });

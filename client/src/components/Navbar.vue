@@ -8,7 +8,7 @@ import { RouterLink } from 'vue-router';
 
 <template>
    <div id="navbar">
-      <RouterLink to="/upload" class="icon"><IconCamera /></RouterLink>
+      <RouterLink to="/upload/image" class="icon"><IconCamera /></RouterLink>
       <RouterLink to="/" class="logo"><IconInstagram /> Instagram</RouterLink>
       <RouterLink to="/" class="icon"><IconMSG /></RouterLink>
    </div>

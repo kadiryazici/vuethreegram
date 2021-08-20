@@ -1,3 +1,3 @@
-### Instagram clone with Vue 3 and Koa
+### Instagram clone with Vue 3 and Express
 
 Currently under development
