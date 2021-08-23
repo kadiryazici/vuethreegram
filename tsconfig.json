@@ -6,11 +6,12 @@
       "lib": ["ES2020"],
       "moduleResolution": "Node",
       "strict": true,
+      "skipLibCheck": true,
       "allowSyntheticDefaultImports": true,
       "esModuleInterop": true,
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true
    },
    "include": ["src/**/*"],
-   "exclude": ["client", "dist", "scripts", ".vscode", "node_modules"]
+   "exclude": ["client", "dist", "scripts", ".vscode", "node_modules/**/*"]
 }

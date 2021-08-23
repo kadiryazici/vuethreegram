@@ -48,7 +48,7 @@ export const setRoute: ExpressServer.SetRoute = async (app, routePath) => {
                request,
                response
             });
-            response.send(html);
+            response.status(200).send(html);
          } catch (err) {
             console.log(err);
             response.status(500).send('Server Error');

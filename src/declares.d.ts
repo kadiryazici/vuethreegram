@@ -1,5 +1,5 @@
-import { KoaServer } from './types';
+import { ExpressServer } from './types';
 
 declare module '*.path.ts' {
-   export const setRoute: KoaServer.setRoute;
+   export const setRoute: ExpressServer.SetRoute;
 }
