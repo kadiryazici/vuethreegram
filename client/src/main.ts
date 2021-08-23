@@ -13,6 +13,7 @@ export default viteSSR(App, { routes }, ({ app, request, response, initialState 
    const head = createHead();
    const pinia = createPinia();
    if (import.meta.env.SSR) {
+      // @ts-ignore
       initialState.csrf = request!.csrfToken?.();
    }
    app.use(head).use(pinia);

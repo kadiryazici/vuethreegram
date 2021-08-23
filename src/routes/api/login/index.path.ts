@@ -6,6 +6,7 @@ import { usePromise } from 'vierone';
 import { createJWT } from '../../../utils/jwt';
 import { Constant } from '../../../constants';
 import { RefreshTokensModel } from '../../../models/RefreshTokens.model';
+import createError from 'http-errors';
 
 export const setRoute: ExpressServer.SetRoute = async (app, path) => {
    app.post(path, Post);
@@ -18,7 +19,7 @@ async function Post(req: Request, res: Response) {
 
    const foundUser = await UsersModel.findOne({ username });
    if (!foundUser) {
-      return res.status(400).send('user is not found');
+      return res.status(400).send(new createError[400](InvalidBody));
    }
 
    const [data] = await usePromise(bcrypt.compare(password, foundUser.password));
