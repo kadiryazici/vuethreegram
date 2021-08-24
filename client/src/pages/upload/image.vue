@@ -15,12 +15,7 @@ async function onSubmit(e: Event) {
 
 <template>
    <form @submit.prevent="onSubmit">
-      <input
-         type="file"
-         name="image"
-         accept="image/png, image/gif, image/jpeg"
-         required
-      />
+      <input type="file" name="image" accept="image/png, image/gif, image/jpeg" required />
       <input name="content" type="text" required min="5" max="280" />
       <input name="image" type="submit" value="Gönder" />
    </form>

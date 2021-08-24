@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { PostSchema } from './Post.model';
+import { PostSchema } from '$models/Post.model';
 import { nanoid } from 'nanoid';
 
 interface IUSer {

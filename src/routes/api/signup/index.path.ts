@@ -1,44 +1,41 @@
 import { Response, Request } from 'express';
-import { UsersModel } from '../../../models/User.model';
-import { Api, ExpressServer } from '../../../types';
+import { UsersModel } from '$models/User.model';
+import { Api, ExpressServer } from '@/types';
 import bcrypt from 'bcrypt';
-import { Constant } from '../../../constants';
-import { validateAuthBody } from '../../../validators/user.validator';
+import { Constant } from '$const/index';
+import { validateAuthBody } from '$validators/user.validator';
 import { usePromise } from 'vierone';
+import { Msg } from '$const/msg';
+import { defineRoute, Success, ThrowRequest } from '$utils/api';
 
-export const setRoute: ExpressServer.SetRoute = async (app, path) => {
+export const setRoute = defineRoute(async (app, path) => {
    app.post(path, Post);
-};
-const InvalidBodyMessage = 'invalid body';
+});
 
 async function Post(req: Request, res: Response) {
-   let { username, password }: Api.UserPayload = req.body;
-   const [newBody, err] = await usePromise(validateAuthBody(req.body as Api.UserPayload));
-   if (err) {
-      return res.status(400).send(InvalidBodyMessage);
+   let { username, password } = req.body as Api.UserPayload;
+
+   const [newBody, validateError] = await usePromise(validateAuthBody({ username, password }));
+   if (validateError) {
+      return ThrowRequest(res, 'BadRequest', Msg.AuthError);
    }
    username = newBody!.username;
    password = newBody!.password;
 
-   const hashedPassword = await bcrypt.hash(password, Constant.bcryptSalt).catch(() => {
-      res.status(500).send('an error occured');
-   });
-   if (hashedPassword) password = hashedPassword;
+   const [hashedPassword, hashError] = await usePromise(bcrypt.hash(password, Constant.bcryptSalt));
+   if (hashError) {
+      return ThrowRequest(res, 'InternalServerError', Msg.UnexpectedError);
+   }
+   password = hashedPassword!;
 
    const foundUser = await UsersModel.findOne({ username });
    if (foundUser) {
-      return res.status(400).send('user exists');
+      return ThrowRequest(res, 'Conflict', Msg.UserAlreadyExists);
    }
 
-   const user = new UsersModel({
-      username,
-      password
-   });
-
+   const user = new UsersModel({ username, password });
    const [, userError] = await usePromise(user.save());
-   if (userError) {
-      return res.status(500).send('an error occured');
-   }
+   if (userError) return ThrowRequest(res, 'InternalServerError', Msg.UnexpectedError);
 
-   res.status(200).send('user has been created');
+   return Success(res, 'Accepted');
 }

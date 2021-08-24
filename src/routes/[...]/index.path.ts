@@ -1,16 +1,8 @@
-import { createSsrServer } from 'vite-ssr/dev';
 import path from 'node:path';
-import type { OutgoingHttpHeaders, OutgoingHttpHeader } from 'http';
-import { ExpressServer } from '../../types';
+import { ExpressServer } from '@/types';
 import express, { Request, Response } from 'express';
+import { defineRoute } from '$utils/api';
 
-interface ServerPackageJson {
-   type: string;
-   main: string;
-   ssr: {
-      assets: string[];
-   };
-}
 type SSRManifest = Record<string, string[]>;
 type Renderer = {
    default: (
@@ -24,13 +16,10 @@ type Renderer = {
       }>
    ) => Promise<{
       html: string;
-      status: number;
-      statusText: string;
-      headers: OutgoingHttpHeaders | OutgoingHttpHeader[];
    }>;
 };
 
-export const setRoute: ExpressServer.SetRoute = async (app, routePath) => {
+export const setRoute = defineRoute(async (app, routePath) => {
    if (process.env.MODE === 'prod') {
       const assetsPath = path.join(process.cwd() + '/prod/client/assets');
       //@ts-ignore
@@ -58,6 +47,7 @@ export const setRoute: ExpressServer.SetRoute = async (app, routePath) => {
       return;
    }
 
+   const { createSsrServer } = await import('vite-ssr/dev');
    // if dev mode run vite server as middlewares
    const viteServer = await createSsrServer({
       server: {
@@ -67,4 +57,4 @@ export const setRoute: ExpressServer.SetRoute = async (app, routePath) => {
    });
 
    app.use(viteServer.middlewares);
-};
+});

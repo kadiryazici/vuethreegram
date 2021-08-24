@@ -1,6 +1,7 @@
 {
    "compilerOptions": {
       "outDir": "./prod",
+      "baseUrl": "src",
       "target": "ES2020",
       "module": "commonjs",
       "lib": ["ES2020"],
@@ -10,7 +11,15 @@
       "allowSyntheticDefaultImports": true,
       "esModuleInterop": true,
       "emitDecoratorMetadata": true,
-      "experimentalDecorators": true
+      "experimentalDecorators": true,
+      "declaration": true,
+      "paths": {
+         "$validators/*": ["./validators/*"],
+         "$utils/*": ["./utils/*"],
+         "$const/*": ["./constants/*"],
+         "$models/*": ["./models/*"],
+         "@/*": ["./*"]
+      }
    },
    "include": ["src/**/*"],
    "exclude": ["client", "dist", "scripts", ".vscode", "node_modules/**/*"]

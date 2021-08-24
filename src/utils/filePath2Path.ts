@@ -1,4 +1,4 @@
-import { trimChars } from './trimChars';
+import { trimChars } from '$utils/trimChars';
 
 const PathParameterRegex = /\[(.*?)\]/g;
 const pathStartsWith = './routes';
