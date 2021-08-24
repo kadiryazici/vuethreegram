@@ -4,8 +4,8 @@ rm -rf prod/client
 mkdir prod/client
 
 mv client/dist/client/ssr-manifest.json client/dist/server
-mv client/dist/client/assets client/dist/
-rm -rf client/dist/client/
+mv client/dist/client/ client/dist/public
+# rm -rf client/dist/client/
 mv client/dist/* prod/client
 
 # cp -a dist/client/. clientfiles/public

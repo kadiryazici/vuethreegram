@@ -20,12 +20,12 @@ type Renderer = {
 
 export const setRoute = defineRoute(async (app, routePath) => {
    if (process.env.MODE === 'prod') {
-      const assetsPath = path.join(process.cwd() + '/prod/client/assets');
+      const assetsPath = path.join(process.cwd() + '/prod/client/public');
       //@ts-ignore
       const manifest: SSRManifest = await import('../../client/server/ssr-manifest.json');
       // @ts-ignore
       const { default: renderer }: Renderer = await import('../../client/server/main.js');
-      app.use('/assets', express.static(assetsPath));
+      app.use('/', express.static(assetsPath));
 
       app.get(routePath, async (request, response) => {
          const url = `${request.protocol}://${request.hostname}${request.originalUrl}`;
