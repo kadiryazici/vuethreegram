@@ -1,4 +1,4 @@
-import { Api, ExpressServer } from '@/types';
+import { Api } from '@/types';
 import { Request, Response } from 'express';
 import { UsersModel } from '$models/User.model';
 import bcrypt from 'bcrypt';
@@ -9,6 +9,7 @@ import { RefreshTokensModel } from '$models/RefreshTokens.model';
 import { defineRoute, Success, ThrowRequest } from '$utils/api';
 import { Msg } from '$const/msg';
 import { validateAuthBody } from '$validators/user.validator';
+import cookie from 'cookie';
 
 export const setRoute = defineRoute(async (app, path) => {
    app.post(path, Post);
@@ -46,5 +47,10 @@ async function Post(req: Request, res: Response) {
    if (refreshTokenSaveError) {
       return ThrowRequest(res, 'InternalServerError', Msg.UnexpectedError);
    }
+   const { jwtName, refreshTokenName } = Constant.cookies;
+   const newJWTCookie = cookie.serialize(jwtName, token, Constant.cookies.jwtOptions);
+   const newRefreshJWTCookie = cookie.serialize(refreshTokenName, refreshToken, Constant.cookies.jwtOptions);
+   res.setHeader('Set-Cookie', [newJWTCookie, newRefreshJWTCookie]);
+   // res.setHeader('Set-Cookie', newRefreshJWTCookie);
    return Success(res);
 }

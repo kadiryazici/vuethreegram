@@ -1,5 +1,4 @@
 import path from 'node:path';
-import { ExpressServer } from '@/types';
 import express, { Request, Response } from 'express';
 import { defineRoute } from '$utils/api';
 

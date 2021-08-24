@@ -32,18 +32,26 @@ export function verifyJWT<T>(payload: string, secret: string, options: VerifyOpt
    });
 }
 
-export function isExpired(msg: string) {
-   if (msg.includes('expired')) {
+export function isExpired(msg: string | Error) {
+   if (!msg) {
+      return false;
+   }
+   const message = msg instanceof Error ? msg.message : msg;
+   if (message.includes('expired')) {
       return true;
    } else {
-      false;
+      return false;
    }
 }
 
-export function isInvalid(msg: string) {
-   if (msg.includes('invalid')) {
+export function isInvalid(msg: string | Error) {
+   if (!msg) {
+      return false;
+   }
+   const message = msg instanceof Error ? msg.message : msg;
+   if (message.includes('invalid')) {
       return true;
    } else {
-      false;
+      return false;
    }
 }

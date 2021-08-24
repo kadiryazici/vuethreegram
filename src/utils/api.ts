@@ -1,6 +1,8 @@
 import { ExpressServer } from '@/types';
 import { Response } from 'express';
 import { prettyLog } from '$utils/prettyLog';
+import cookie, { CookieSerializeOptions } from 'cookie';
+import { Constant } from '$const/index';
 
 const HttpStatus = Object.freeze({
    OK: 200,
@@ -86,4 +88,14 @@ export function defineRoute(fn: ExpressServer.SetRoute): ExpressServer.SetRoute 
       prettyLog('ROUTE', path);
       await fn(app, path);
    };
+}
+
+export function removeJWTCookies(res: Response) {
+   const option: CookieSerializeOptions = {
+      maxAge: 0
+   };
+   res.setHeader('Set-Cookie', [
+      cookie.serialize(Constant.cookies.jwtName, '', option),
+      cookie.serialize(Constant.cookies.refreshTokenName, '', option)
+   ]);
 }

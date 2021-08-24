@@ -1,4 +1,5 @@
 import { Server } from '.';
+import { Constant } from './constants';
 
 declare global {
    namespace NodeJS {
@@ -14,6 +15,7 @@ declare global {
    namespace Express {
       export interface Request {
          createCSRFToken: () => string;
+         userID?: string;
       }
    }
 }
@@ -31,5 +33,13 @@ export namespace Api {
    export interface UserPayload {
       username: string;
       password: string;
+   }
+   export interface CookiePayload {
+      [Constant.cookies.jwtName]: string;
+      [Constant.cookies.refreshTokenName]: string;
+      [key: string]: string;
+   }
+   export interface JWTBody {
+      id: string;
    }
 }

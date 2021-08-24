@@ -5,21 +5,29 @@ import Navbar from '/src/components/Navbar.vue';
 
 function login() {
    axios.post(
-      'http://localhost:4000/api/login',
+      'http://localhost:3000/api/login',
       {
          username: 'kadir',
-         password: 'vierone'
+         password: '222222'
       },
       {
          withCredentials: true
       }
    );
 }
+
+function checkUser() {
+   axios.get('http://localhost:3000/user', {
+      withCredentials: true
+   });
+}
 </script>
 
 <template>
    <Navbar />
    <button @click="login">Giriş</button>
+   --
+   <button @click="checkUser">Kontrol</button>
    <RouterView v-slot="{ Component }">
       <Suspense>
          <Component :is="Component" />
