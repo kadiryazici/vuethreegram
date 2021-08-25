@@ -1,4 +1,5 @@
 import { CookieSerializeOptions } from 'cookie';
+import type { ServeStaticOptions } from 'serve-static';
 
 export const Constant = deepFreeze({
    bcryptSalt: 10,
@@ -26,7 +27,14 @@ export const Constant = deepFreeze({
          path: '/',
          maxAge: 2147483647
       } as CookieSerializeOptions
-   }
+   },
+   post: {
+      maxImageSize: 1024 * 1024 * 5,
+      supportedMimeTypes: ['image/png', 'image/jpeg'] as string[]
+   },
+   expressStaticOptions: {
+      maxAge: '1d'
+   } as ServeStaticOptions
 } as const);
 
 function deepFreeze<T extends Record<string, any>>(o: T): T {

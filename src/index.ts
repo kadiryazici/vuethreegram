@@ -10,6 +10,9 @@ import { CSRFMiddlewareGlobal, logCSRFToken } from '@/middlewares/csrf';
 import cors from 'cors';
 import { createJWT } from '$utils/jwt';
 import { prettyLog } from '$utils/prettyLog';
+import path from 'node:path';
+import compression from 'compression';
+import { Constant } from './constants';
 
 dotenv.config();
 const app: Express = express();
@@ -18,18 +21,21 @@ async function createServer() {
    await initDB();
    app.disable('x-powered-by');
 
+   // app.use(express.)
    app.use(CSRFMiddlewareGlobal);
+   app.use(compression());
    app.use(express.json());
-   // if (process.env.MODE === 'dev') {
-   app.use(
-      cors({
-         origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
-         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-         allowedHeaders: 'X-CSRF-Token, X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
-         credentials: true
-      })
-   );
-   // }
+   app.use('/img', express.static(path.join(process.cwd(), 'imgstorage'), Constant.expressStaticOptions));
+   /*if (process.env.MODE === 'dev')*/ {
+      app.use(
+         cors({
+            origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+            methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+            allowedHeaders: 'X-CSRF-Token, X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
+            credentials: true
+         })
+      );
+   }
 
    if (process.env.MODE === 'dev') {
       setTimeout(async () => {
@@ -43,7 +49,8 @@ async function createServer() {
          });
          prettyLog('TEMP_JWT', tempJWT);
          prettyLog('TEMP_JWT_REFRESH', tempRefreshJWT);
-      }, 2000);
+         logCSRFToken();
+      }, 0);
    }
 
    // auto importing routes
@@ -59,7 +66,7 @@ async function createServer() {
 
    const port = process.env.PORT || 3000;
    app.listen(port, async () => {
-      console.log(`App is up on ${port}`);
+      prettyLog(process.env.MODE.toUpperCase(), `App is up on http://localhost:${port}`);
    });
 }
 createServer();

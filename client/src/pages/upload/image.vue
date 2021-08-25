@@ -1,22 +1,22 @@
 <script lang="ts" setup>
-import axios from 'axios';
-async function onSubmit(e: Event) {
-   if (e.target && e.target instanceof HTMLFormElement) {
-      const formData = new FormData(e.target);
-      await axios({
-         url: 'http://localhost:4000/api/upload/post',
+async function fileEvent(e: Event) {
+   const { target } = e;
+   if (target instanceof HTMLInputElement) {
+      const file = target.files?.[0];
+      const formData = new FormData();
+      formData.set('image', file!);
+      formData.set('content', 'Follow my account please Im beginngi you');
+      await fetch('http://localhost:3000/api/createpost', {
          method: 'POST',
-         data: formData,
-         withCredentials: true
+         body: formData,
+         credentials: 'include'
       });
    }
 }
 </script>
 
 <template>
-   <form @submit.prevent="onSubmit">
-      <input type="file" name="image" accept="image/png, image/gif, image/jpeg" required />
-      <input name="content" type="text" required min="5" max="280" />
-      <input name="image" type="submit" value="Gönder" />
-   </form>
+   <div>
+      <input @change="fileEvent" type="file" name="image" accept="image/png, image/jpeg" required />
+   </div>
 </template>

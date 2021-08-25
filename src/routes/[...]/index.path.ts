@@ -1,6 +1,7 @@
 import path from 'node:path';
 import express, { Request, Response } from 'express';
 import { defineRoute } from '$utils/api';
+import { Constant } from '$const/index';
 
 type SSRManifest = Record<string, string[]>;
 type Renderer = {
@@ -25,7 +26,7 @@ export const setRoute = defineRoute(async (app, routePath) => {
       const manifest: SSRManifest = await import('../../client/server/ssr-manifest.json');
       // @ts-ignore
       const { default: renderer }: Renderer = await import('../../client/server/main.js');
-      app.use('/', express.static(assetsPath));
+      app.use('/', express.static(assetsPath, Constant.expressStaticOptions));
 
       app.get(routePath, async (request, response) => {
          const url = `${request.protocol}://${request.hostname}${request.originalUrl}`;
