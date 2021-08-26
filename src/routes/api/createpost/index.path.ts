@@ -9,10 +9,13 @@ import { Constant } from '$const/index';
 import { usePromise } from 'vierone';
 import { Msg } from '$const/msg';
 import { devLog } from '$utils/devLog';
+import { authGuard } from '@/middlewares/auth';
+import { PostModel } from '$models/Post.model';
+import { Api } from '@/types';
 
 export const setRoute = defineRoute(async (app, path) => {
    const mw = uploadMultipart.single('image');
-   app.post(path, mw, Post);
+   app.post(path, authGuard, mw, Post);
 });
 
 enum Err {
@@ -75,9 +78,23 @@ async function Post(req: Request, res: Response) {
    const fileName = `${nanoid()}.${ext}`;
    const targetPath = path.join(process.cwd(), 'imgstorage', fileName);
 
+   const { content = '' } = req.body as Api.CreatePostRequestBody;
+   const post = new PostModel({
+      content,
+      image: fileName,
+      userID: req.userID!
+   });
+
+   const [newPost, postSaveError] = await usePromise(post.save());
+   if (!newPost || postSaveError) {
+      return UnexpectedError(res);
+   }
+
    const [, writeFileError] = await usePromise(fs.writeFile(targetPath, fileInfo.file.buffer));
    if (writeFileError) {
       UnexpectedError(res);
    }
-   return Success(res);
+   return res.json({
+      postID: newPost.id
+   } as Api.CreatePostResponseBody);
 }

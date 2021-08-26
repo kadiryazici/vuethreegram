@@ -25,7 +25,10 @@ async function createServer() {
    app.use(CSRFMiddlewareGlobal);
    app.use(compression());
    app.use(express.json());
-   app.use('/img', express.static(path.join(process.cwd(), 'imgstorage'), Constant.expressStaticOptions));
+   app.use(
+      Constant.post.imgStartUrl,
+      express.static(path.join(process.cwd(), 'imgstorage'), Constant.expressStaticOptions)
+   );
    /*if (process.env.MODE === 'dev')*/ {
       app.use(
          cors({
@@ -69,7 +72,10 @@ async function createServer() {
       prettyLog(process.env.MODE.toUpperCase(), `App is up on http://localhost:${port}`);
    });
 }
-createServer();
+createServer().catch((err) => {
+   prettyLog('ERROR', 'An error happened while creating server');
+   console.error(err);
+});
 
 export default app;
 export type Server = typeof app;

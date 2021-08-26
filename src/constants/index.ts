@@ -30,7 +30,8 @@ export const Constant = deepFreeze({
    },
    post: {
       maxImageSize: 1024 * 1024 * 5,
-      supportedMimeTypes: ['image/png', 'image/jpeg'] as string[]
+      supportedMimeTypes: ['image/png', 'image/jpeg'] as string[],
+      imgStartUrl: '/postimg'
    },
    expressStaticOptions: {
       maxAge: '1d'

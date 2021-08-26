@@ -42,4 +42,10 @@ export namespace Api {
    export interface JWTBody {
       id: string;
    }
+   export interface CreatePostResponseBody {
+      postID: string;
+   }
+   export interface CreatePostRequestBody {
+      content: string;
+   }
 }

@@ -15,7 +15,11 @@ export default defineConfig({
       Pages({
          pagesDir: './src/pages'
       }),
-      Vue(),
+      Vue({
+         script: {
+            refSugar: true
+         }
+      }),
       VueJSX(),
       SSR({}),
       ViteIcons()

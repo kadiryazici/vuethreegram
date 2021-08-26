@@ -41,6 +41,12 @@ export const authGuard: Handler = async (req, res, next) => {
       if (isJWTExpired && !isRefreshExpired && !isRefreshInvalid) {
          devLog('isJWTExpired && !isRefreshExpired');
 
+         const isRefreshTokenSigned = await RefreshTokensModel.exists({ token: cookies[refreshTokenName] });
+         if (!isRefreshTokenSigned) {
+            devLog('!isRefreshTokenSigned');
+            return throwError();
+         }
+
          const id = refJWTPayload?.id;
          if (!id) {
             devLog('!id');
@@ -54,11 +60,6 @@ export const authGuard: Handler = async (req, res, next) => {
          }
 
          // Check database for refreshToken
-         const isRefreshTokenSigned = await RefreshTokensModel.exists({ token: cookies[refreshTokenName] });
-         if (!isRefreshTokenSigned) {
-            devLog('!isRefreshTokenSigned');
-            return throwError();
-         }
 
          try {
             await RefreshTokensModel.deleteOne({ token: cookies.ref_jwt });
@@ -74,6 +75,7 @@ export const authGuard: Handler = async (req, res, next) => {
          });
          const newJWTCookie = cookie.serialize(jwtName, newJWT, Constant.cookies.jwtOptions);
          const newRefreshJWTCookie = cookie.serialize(refreshTokenName, newRefreshJWT, Constant.cookies.jwtOptions);
+
          const JWTModel = new RefreshTokensModel({ token: newRefreshJWT });
          const [, jwtSaveError] = await usePromise(JWTModel.save());
          if (jwtSaveError) {
