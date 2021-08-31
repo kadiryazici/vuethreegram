@@ -82,7 +82,7 @@ async function Post(req: Request, res: Response) {
    const post = new PostModel({
       content,
       image: fileName,
-      userID: req.userID!
+      postedBy: req.userID!
    });
 
    const [newPost, postSaveError] = await usePromise(post.save());
@@ -92,9 +92,9 @@ async function Post(req: Request, res: Response) {
 
    const [, writeFileError] = await usePromise(fs.writeFile(targetPath, fileInfo.file.buffer));
    if (writeFileError) {
-      UnexpectedError(res);
+      return UnexpectedError(res);
    }
    return res.json({
-      postID: newPost.id
+      postID: newPost._id
    } as Api.CreatePostResponseBody);
 }

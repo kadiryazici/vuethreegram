@@ -48,4 +48,18 @@ export namespace Api {
    export interface CreatePostRequestBody {
       content: string;
    }
+   export interface MongoResponse {
+      createdAt: string;
+      updatedAt: string;
+      _id: string;
+   }
+   export interface UserResponse extends MongoResponse {
+      _id: string;
+      username: string;
+   }
+   export interface PostResponse extends MongoResponse {
+      postedBy: UserResponse;
+      image: string;
+      content: string;
+   }
 }

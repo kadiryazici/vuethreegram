@@ -1,29 +1,28 @@
 import { model, Schema } from 'mongoose';
-import { nanoid } from 'nanoid';
+import { IUSer } from './User.model';
 
-interface IPost {
+export interface IPost {
    content?: string;
    image: string;
    likes: number[];
    id: string;
-   userID: string;
+   postedBy: IUSer;
 }
 
 export const PostSchema = new Schema(
    {
       content: String,
       image: String,
-      userID: String,
-      id: {
-         type: String,
-         default: nanoid
+      postedBy: {
+         type: Schema.Types.ObjectId,
+         ref: 'users'
       },
       likes: {
          type: [String],
          default: []
       }
    },
-   { timestamps: true }
+   { timestamps: true, _id: true }
 );
 
 export const PostModel = model<IPost>('posts', PostSchema);

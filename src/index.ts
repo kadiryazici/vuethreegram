@@ -58,6 +58,7 @@ async function createServer() {
 
    // auto importing routes
    let entries = await fg('./routes/**/*.path.js', { cwd: __dirname });
+
    const routesWithStars = entries.filter((route) => route.includes('[...]'));
    const normalRoutes = entries.filter((route) => !route.includes('[...]'));
    entries = [...normalRoutes, ...routesWithStars];

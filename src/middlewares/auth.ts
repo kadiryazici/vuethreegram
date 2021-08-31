@@ -53,7 +53,7 @@ export const authGuard: Handler = async (req, res, next) => {
             return throwError();
          }
 
-         const isIDValid = await UsersModel.exists({ id });
+         const isIDValid = await UsersModel.exists({ _id: id });
          if (!isIDValid) {
             devLog('!isIDValid');
             return throwError();

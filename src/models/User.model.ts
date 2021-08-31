@@ -2,8 +2,8 @@ import { model, Schema } from 'mongoose';
 import { PostSchema } from '$models/Post.model';
 import { nanoid } from 'nanoid';
 
-interface IUSer {
-   id?: string;
+export interface IUSer {
+   _id: string;
    posts?: [];
    username: string;
    password: string;
@@ -11,20 +11,12 @@ interface IUSer {
 
 export const UserSchema = new Schema(
    {
-      id: {
-         type: String,
-         default: nanoid
-      },
       username: String,
-      password: String,
-      posts: {
-         type: [PostSchema],
-         default: []
-      }
+      password: String
    },
    {
       timestamps: true
    }
 );
 
-export const UsersModel = model<IUSer>('Users', UserSchema);
+export const UsersModel = model<IUSer>('users', UserSchema);

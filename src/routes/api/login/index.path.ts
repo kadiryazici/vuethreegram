@@ -35,10 +35,10 @@ async function Post(req: Request, res: Response) {
       return ThrowRequest(res, 'NotFound', Msg.AuthError);
    }
 
-   const token = await createJWT({ id: foundUser.id }, process.env.JWT_SECRET, {
+   const token = await createJWT({ id: foundUser._id }, process.env.JWT_SECRET, {
       expiresIn: Constant.token.expireTime
    });
-   const refreshToken = await createJWT({ id: foundUser.id }, process.env.JWT_REFRESH_SECRET, {
+   const refreshToken = await createJWT({ id: foundUser._id }, process.env.JWT_REFRESH_SECRET, {
       expiresIn: Constant.token.refreshTokenExpireTime
    });
 
@@ -51,6 +51,5 @@ async function Post(req: Request, res: Response) {
    const newJWTCookie = cookie.serialize(jwtName, token, Constant.cookies.jwtOptions);
    const newRefreshJWTCookie = cookie.serialize(refreshTokenName, refreshToken, Constant.cookies.jwtOptions);
    res.setHeader('Set-Cookie', [newJWTCookie, newRefreshJWTCookie]);
-   // res.setHeader('Set-Cookie', newRefreshJWTCookie);
    return Success(res);
 }
