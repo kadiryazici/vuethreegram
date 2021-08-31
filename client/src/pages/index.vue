@@ -1,22 +1,17 @@
 <script lang="ts" setup>
-function login() {
-   const headers = new Headers();
-   headers.set('Content-Type', 'application/json');
+import Page from '$comp/Page/index.vue';
+import { getPosts } from '/src/api/getPosts';
+import Post from '$comp/Post/index.vue';
 
-   fetch('http://localhost:3000/api/login', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-         username: 'kadir',
-         password: '222222'
-      }),
-      credentials: 'same-origin'
-   });
-}
+const posts = await getPosts();
 </script>
 <template>
-   <div>
-      <h2 class="text-violet-800">Burası ana Sayfadır</h2>
-      <button class="purple-button" @click="login">Giriş Yap</button>
-   </div>
+   <Page>
+      <div v-if="!posts">Yükleniyor...</div>
+      <template v-else>
+         <Post v-for="post in posts" :data="post" :key="post._id" />
+      </template>
+   </Page>
 </template>
+
+<style lang="scss" scoped></style>

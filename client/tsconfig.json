@@ -13,6 +13,7 @@
       "lib": ["esnext", "dom"],
       "paths": {
          "$types": ["../src/types.ts"],
+         "$comp/*": ["./src/components/*"],
          "/*": ["./*"]
       }
    },

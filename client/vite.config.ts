@@ -5,6 +5,7 @@ import Vue from '@vitejs/plugin-vue';
 import VueJSX from '@vitejs/plugin-vue-jsx';
 import SSR from 'vite-ssr/plugin';
 import ViteIcons from 'vite-plugin-icons';
+import path from 'node:path';
 
 export default defineConfig({
    build: {
@@ -23,5 +24,10 @@ export default defineConfig({
       VueJSX(),
       SSR({}),
       ViteIcons()
-   ]
+   ],
+   resolve: {
+      alias: {
+         $comp: path.resolve(__dirname, 'src/components')
+      }
+   }
 });

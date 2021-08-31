@@ -18,7 +18,11 @@ import Navbar from '/src/components/Navbar.vue';
 * {
    font-family: 'Lexend Deca', sans-serif !important;
 }
+body {
+   @apply bg-light-700;
+}
 #app {
-   @apply py-60px bg-light-300 min-h-100vh px-3;
+   @apply py-75px min-h-100vh px-3;
+   overscroll-behavior: none;
 }
 </style>
