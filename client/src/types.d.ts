@@ -1,10 +1,15 @@
-export type Int = number;
 import { Request, Response } from 'express';
+import { StateTree } from 'pinia';
 
-declare module 'vite-ssr' {
-   interface SharedContext {
+declare module 'vite-ssr/vue/types' {
+   export interface Context {
       request: Request;
       response: Response;
+      initialState: {
+         pinia: Record<string, StateTree>;
+         csrf: string;
+         [key: string]: any;
+      };
    }
 }
 

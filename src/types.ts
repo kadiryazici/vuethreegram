@@ -1,5 +1,11 @@
+import { IUSer } from '$models/User.model';
 import { Server } from '.';
 import { Constant } from './constants';
+import nodeFetch from 'node-fetch';
+
+declare global {
+   var fetch: typeof nodeFetch;
+}
 
 declare global {
    namespace NodeJS {
@@ -15,7 +21,7 @@ declare global {
    namespace Express {
       export interface Request {
          createCSRFToken: () => string;
-         userID?: string;
+         user?: IUSer;
       }
    }
 }
@@ -61,5 +67,14 @@ export namespace Api {
       postedBy: UserResponse;
       image: string;
       content: string;
+   }
+   export interface NoDataResponse {
+      statusCode: number;
+      message: string;
+      type: number;
+   }
+   export interface LoginResponse {
+      username: string;
+      userID: string;
    }
 }

@@ -1,3 +1,4 @@
+import { ErrorType } from '$const/errorTypes';
 import { Msg } from '$const/msg';
 import { ThrowRequest } from '$utils/api';
 import { prettyLog } from '$utils/prettyLog';
@@ -7,13 +8,20 @@ import { Request, Response, NextFunction } from 'express';
 const tokens = new Tokens();
 const secret = tokens.secretSync();
 
+const SendError = (res: Response) =>
+   ThrowRequest(res, {
+      type: ErrorType.CSRFError,
+      status: 'BadRequest',
+      message: Msg.CSRFError
+   });
+
 export function csrfGuard(req: Request, res: Response, next: NextFunction) {
    const XCSRFToken = req.header('x-csrf-token');
    if (!XCSRFToken) {
-      return ThrowRequest(res, 'BadRequest', Msg.CSRFError);
+      return SendError(res);
    }
    if (!tokens.verify(secret, XCSRFToken)) {
-      return ThrowRequest(res, 'BadRequest', Msg.CSRFError);
+      return SendError(res);
    }
    return next();
 }

@@ -1,9 +1,14 @@
 <script lang="ts" setup>
 import IconUpload from 'virtual:vite-icons/icon-park-outline/upload';
-import { usePromise } from 'vierone';
 import { isMimeTypeSupported } from '/src/helpers/index';
-import type { Api } from '$types';
 import Page from '$comp/Page/index.vue';
+import { useMainStore } from '/src/stores/mainStore';
+import { createPost, MakeFetchError } from '/src/api/uploadPost';
+import { usePromise } from 'vierone';
+import { Api } from '$types';
+import { ErrorType } from '/src/helpers/errorTypes';
+
+const mainStore = useMainStore();
 
 let filePickerElement = $ref<null | HTMLInputElement>(null);
 let imageUrl = $ref('');
@@ -46,16 +51,15 @@ async function uploadPost() {
    formData.set('image', file!);
    formData.set('content', postContent.trim());
 
-   const [uploadResponse, uploadError] = await usePromise(
-      fetch('http://localhost:3000/api/createpost', {
-         method: 'POST',
-         body: formData,
-         credentials: 'same-origin'
-      })
-   );
-   if (uploadError) {
-      console.error(uploadError);
+   const [data, error] = await usePromise(createPost(formData));
+   if (error || !data) {
+      const err = error as MakeFetchError<Api.NoDataResponse>;
+      if (err.data.type === ErrorType.Unauthorized) {
+         alert('giriş yapmak gerekmekte');
+      }
+      return;
    }
+
    imageUrl = '';
    postContent = '';
    filePickerElement!.value = '';

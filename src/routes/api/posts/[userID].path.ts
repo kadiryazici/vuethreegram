@@ -1,8 +1,14 @@
 import { IPost, PostModel } from '$models/Post.model';
 import { defineRoute } from '$utils/api';
+import { csrfGuard } from '@/middlewares/csrf';
+import { Handler } from 'express';
 
 export const setRoute = defineRoute(async (app, path) => {
-   app.get(path, async (req, res) => {
+   app.get(path, csrfGuard, Get());
+});
+
+function Get(): Handler {
+   return async (req, res) => {
       const id = req.params.userID;
 
       // @ts-ignore
@@ -12,5 +18,5 @@ export const setRoute = defineRoute(async (app, path) => {
          .sort({ createdAt: '-1' })
          .exec();
       res.send(posts);
-   });
-});
+   };
+}

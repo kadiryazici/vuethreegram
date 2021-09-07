@@ -1,18 +1,23 @@
 import 'reflect-metadata';
 
+import { CSRFMiddlewareGlobal, logCSRFToken } from '@/middlewares/csrf';
+import express, { Express } from 'express';
+
+import { Constant } from './constants';
+import { ExpressServer } from '@/types';
+import compression from 'compression';
+import cors from 'cors';
+import { createJWT } from '$utils/jwt';
 import dotenv from 'dotenv';
 import fg from 'fast-glob';
 import { filePath2Path } from '$utils/filePath2Path';
-import { ExpressServer } from '@/types';
-import express, { Express } from 'express';
 import { initDB } from '@/db';
-import { CSRFMiddlewareGlobal, logCSRFToken } from '@/middlewares/csrf';
-import cors from 'cors';
-import { createJWT } from '$utils/jwt';
-import { prettyLog } from '$utils/prettyLog';
+import { mw_AutoRefreshTokenAndPassUser } from './middlewares/auth';
+import nodeFetch from 'node-fetch';
 import path from 'node:path';
-import compression from 'compression';
-import { Constant } from './constants';
+import { prettyLog } from '$utils/prettyLog';
+
+globalThis.fetch = nodeFetch;
 
 dotenv.config();
 const app: Express = express();
@@ -21,7 +26,7 @@ async function createServer() {
    await initDB();
    app.disable('x-powered-by');
 
-   // app.use(express.)
+   app.use(mw_AutoRefreshTokenAndPassUser);
    app.use(CSRFMiddlewareGlobal);
    app.use(compression());
    app.use(express.json());

@@ -1,7 +1,9 @@
 import path from 'node:path';
 import express, { Request, Response } from 'express';
-import { defineRoute } from '$utils/api';
+import { defineRoute, ThrowRequest } from '$utils/api';
 import { Constant } from '$const/index';
+import { Msg } from '$const/msg';
+import { ErrorType } from '$const/errorTypes';
 
 type SSRManifest = Record<string, string[]>;
 type Renderer = {
@@ -29,7 +31,8 @@ export const setRoute = defineRoute(async (app, routePath) => {
       app.use('/', express.static(assetsPath, Constant.expressStaticOptions));
 
       app.get(routePath, async (request, response) => {
-         const url = `${request.protocol}://${request.hostname}${request.originalUrl}`;
+         const { protocol, hostname, originalUrl } = request;
+         const url = `${protocol}://${hostname}${originalUrl}`;
          try {
             const { html } = await renderer(url, {
                preload: true,
@@ -37,14 +40,16 @@ export const setRoute = defineRoute(async (app, routePath) => {
                request,
                response
             });
-            response.status(200).send(html);
+            return response.status(200).send(html);
          } catch (err) {
             console.log(err);
-            response.status(500).send('Server Error');
+            return ThrowRequest(response, {
+               message: Msg.UnexpectedError,
+               status: 'InternalServerError',
+               type: ErrorType.UnexpectedError
+            });
          }
       });
-
-      return;
    }
 
    const { createSsrServer } = await import('vite-ssr/dev');

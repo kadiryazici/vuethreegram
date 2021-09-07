@@ -1,23 +1,42 @@
-import { Handler } from 'express';
-import cookie from 'cookie';
-import { removeJWTCookies, Success, ThrowRequest } from '$utils/api';
-import { Msg } from '$const/msg';
-import { Constant } from '$const/index';
-import { usePromise } from 'vierone';
+import { Handler, Response } from 'express';
+import { ThrowRequest, removeJWTCookies } from '$utils/api';
 import { createJWT, isExpired, isInvalid, verifyJWT } from '$utils/jwt';
-import { Api } from '@/types';
-import { RefreshTokensModel } from '$models/RefreshTokens.model';
-import { devLog } from '$utils/devLog';
-import { UsersModel } from '$models/User.model';
 
-export const authGuard: Handler = async (req, res, next) => {
-   const throwError = () => ThrowRequest(res, 'Unauthorized', Msg.Unauthorized);
+import { Api } from '@/types';
+import { Constant } from '$const/index';
+import { ErrorType } from '$const/errorTypes';
+import { Msg } from '$const/msg';
+import { RefreshTokensModel } from '$models/RefreshTokens.model';
+import { UsersModel } from '$models/User.model';
+import cookie from 'cookie';
+import { devLog } from '$utils/devLog';
+import { usePromise } from 'vierone';
+
+const ThrowUnauthorized = (res: Response) =>
+   ThrowRequest(res, {
+      message: Msg.Unauthorized,
+      type: ErrorType.Unauthorized,
+      status: 'Unauthorized'
+   });
+const ThrowInternalServerError = (res: Response) =>
+   ThrowRequest(res, {
+      message: Msg.UnexpectedError,
+      type: ErrorType.UnexpectedError,
+      status: 'InternalServerError'
+   });
+
+/**
+ * This is auth middleware it checks jwt cookie for authentication
+ * if jwt or refresh token is invalid, it deletes cookies and sends Unatuhorized
+ * if jwt is expierd but refresh token is viable, refreshes jwt and refresh token automatically
+ * after checking refresh_token in database and then passes user to route
+ */
+export const mw_AutoRefreshTokenAndPassUser: Handler = async (req, res, next) => {
    const { jwtName, refreshTokenName } = Constant.cookies;
 
    const cookies = cookie.parse(req.headers.cookie || '') as Api.CookiePayload;
-   if (!cookies || !cookies[jwtName] || !cookies[refreshTokenName]) {
-      devLog('!cookies || !cookies[jwtName] || !cookies[refreshTokenName]');
-      return throwError();
+   if (!cookies || !cookies[jwtName]) {
+      return next();
    }
 
    const [jwtPayload, jwtError] = await usePromise(verifyJWT<Api.JWTBody>(cookies[jwtName], process.env.JWT_SECRET));
@@ -28,43 +47,34 @@ export const authGuard: Handler = async (req, res, next) => {
    // check if tokens are invalid
    const isTokenInvalid = isInvalid(jwtError);
    const isRefreshInvalid = isInvalid(refJWTError);
-   if (isTokenInvalid) {
-      devLog('isTokenInvalid');
-      return throwError();
+   if (isTokenInvalid || !jwtPayload?.id) {
+      return next();
    }
 
    // if tokens are not invalid check for expiration
    const isJWTExpired = isExpired(jwtError);
    const isRefreshExpired = isExpired(refJWTError);
    if (isJWTExpired) {
-      devLog('isJWTExpired');
       if (isJWTExpired && !isRefreshExpired && !isRefreshInvalid) {
-         devLog('isJWTExpired && !isRefreshExpired');
-
          const isRefreshTokenSigned = await RefreshTokensModel.exists({ token: cookies[refreshTokenName] });
          if (!isRefreshTokenSigned) {
-            devLog('!isRefreshTokenSigned');
-            return throwError();
+            return next();
          }
 
          const id = refJWTPayload?.id;
          if (!id) {
-            devLog('!id');
-            return throwError();
+            return next();
          }
 
-         const isIDValid = await UsersModel.exists({ _id: id });
-         if (!isIDValid) {
-            devLog('!isIDValid');
-            return throwError();
+         const foundUser = await UsersModel.findOne({ _id: id }).select('-password -__v').exec();
+         if (!foundUser) {
+            return next();
          }
-
-         // Check database for refreshToken
 
          try {
             await RefreshTokensModel.deleteOne({ token: cookies.ref_jwt });
          } catch {
-            return ThrowRequest(res, 'InternalServerError', Msg.UnexpectedError);
+            return ThrowInternalServerError(res);
          }
 
          const newJWT = await createJWT({ id }, process.env.JWT_SECRET, {
@@ -73,25 +83,41 @@ export const authGuard: Handler = async (req, res, next) => {
          const newRefreshJWT = await createJWT({ id }, process.env.JWT_REFRESH_SECRET, {
             expiresIn: Constant.token.refreshTokenExpireTime
          });
-         const newJWTCookie = cookie.serialize(jwtName, newJWT, Constant.cookies.jwtOptions);
-         const newRefreshJWTCookie = cookie.serialize(refreshTokenName, newRefreshJWT, Constant.cookies.jwtOptions);
 
          const JWTModel = new RefreshTokensModel({ token: newRefreshJWT });
          const [, jwtSaveError] = await usePromise(JWTModel.save());
          if (jwtSaveError) {
-            return ThrowRequest(res, 'InternalServerError', Msg.UnexpectedError);
+            return ThrowInternalServerError(res);
          }
 
-         res.setHeader('Set-Cookie', [newJWTCookie, newRefreshJWTCookie]);
-         req.userID = id;
+         const { jwtOptions } = Constant.cookies;
+         res.cookie(jwtName, newJWT, jwtOptions);
+         res.cookie(refreshTokenName, newRefreshJWT, jwtOptions);
+
+         req.user = foundUser;
          return next();
       }
 
-      removeJWTCookies(res);
-      return throwError();
+      return next();
    }
 
-   devLog('authGuard no error occured');
-   req.userID = refJWTPayload?.id;
+   const foundUser = await UsersModel.findOne({ _id: jwtPayload.id }).select('-password -__v').exec();
+   if (!foundUser) {
+      removeJWTCookies(res);
+      return ThrowUnauthorized(res);
+   }
+   req.user = foundUser;
    next();
+};
+
+export const mw_AuthNeeded: Handler = (req, res, next) => {
+   if (req.user) {
+      return next();
+   }
+
+   return ThrowRequest(res, {
+      message: Msg.Unauthorized,
+      type: ErrorType.Unauthorized,
+      status: 'Unauthorized'
+   });
 };

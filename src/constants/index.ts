@@ -1,5 +1,6 @@
 import { CookieSerializeOptions } from 'cookie';
 import type { ServeStaticOptions } from 'serve-static';
+import { deepFreeze } from '$utils/deepFreeze';
 
 export const Constant = deepFreeze({
    bcryptSalt: 10,
@@ -14,8 +15,8 @@ export const Constant = deepFreeze({
       }
    },
    token: {
-      expireTime: process.env.MODE === 'dev' ? '1m' : '15m',
-      refreshTokenExpireTime: process.env.MODE === 'dev' ? '2m' : '7d'
+      expireTime: '15m',
+      refreshTokenExpireTime: '7d'
    },
    cookies: {
       jwtName: 'jwt',
@@ -25,7 +26,7 @@ export const Constant = deepFreeze({
          sameSite: 'strict',
          secure: true,
          path: '/',
-         maxAge: 2147483647
+         maxAge: 21474836
       } as CookieSerializeOptions
    },
    post: {
@@ -37,22 +38,3 @@ export const Constant = deepFreeze({
       maxAge: '1d'
    } as ServeStaticOptions
 } as const);
-
-function deepFreeze<T extends Record<string, any>>(o: T): T {
-   Object.freeze(o);
-   if (o === undefined) {
-      return o;
-   }
-
-   Object.getOwnPropertyNames(o).forEach(function (prop) {
-      if (
-         o[prop] !== null &&
-         (typeof o[prop] === 'object' || typeof o[prop] === 'function') &&
-         !Object.isFrozen(o[prop])
-      ) {
-         deepFreeze(o[prop]);
-      }
-   });
-
-   return o;
-}

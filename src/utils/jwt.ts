@@ -13,7 +13,7 @@ export function createJWT(
          if (token) {
             return resolve(token);
          }
-         return new Error('unknown error occured');
+         return reject(new Error('unknown error occured'));
       });
    });
 }
@@ -27,7 +27,7 @@ export function verifyJWT<T>(payload: string, secret: string, options: VerifyOpt
          if (payload) {
             return resolve(payload as T & JwtPayload);
          }
-         return new Error('unknown error occured');
+         return reject(new Error('unknown error occured'));
       });
    });
 }

@@ -4,7 +4,6 @@ import { nanoid } from 'nanoid';
 
 export interface IUSer {
    _id: string;
-   posts?: [];
    username: string;
    password: string;
 }

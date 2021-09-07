@@ -1,8 +1,10 @@
+import cookie, { CookieSerializeOptions } from 'cookie';
+
+import { Constant } from '$const/index';
+import { ErrorType } from '$const/errorTypes';
 import { ExpressServer } from '@/types';
 import { Response } from 'express';
 import { prettyLog } from '$utils/prettyLog';
-import cookie, { CookieSerializeOptions } from 'cookie';
-import { Constant } from '$const/index';
 
 enum HttpStatus {
    OK = 200,
@@ -64,21 +66,29 @@ enum HttpStatus {
 }
 
 type HttpCode = keyof typeof HttpStatus;
-
-export function Success(res: Response, status: HttpCode = 'OK', message = 'Successful') {
-   const statusCode = HttpStatus[status];
+interface SuccessOptions {
+   message?: string;
+   status?: HttpCode;
+}
+export function Success(res: Response, { status, message }: SuccessOptions = {}) {
+   const statusCode = HttpStatus[status || 'OK'];
    return res.status(statusCode).send({
       statusCode,
-      message,
+      message: message || 'success',
       type: 'success'
    });
 }
 
-export function ThrowRequest(res: Response, status: HttpCode, message: string) {
-   const statusCode = HttpStatus[status];
+interface ThrowRequestOptions {
+   message: string;
+   type?: ErrorType;
+   status?: HttpCode;
+}
+export function ThrowRequest(res: Response, { message, status, type }: ThrowRequestOptions) {
+   const statusCode = HttpStatus[status || 'BadRequest'];
    return res.status(statusCode).send({
       statusCode,
-      type: 'error',
+      type: type || ErrorType.Error,
       message
    });
 }
@@ -91,11 +101,6 @@ export function defineRoute(fn: ExpressServer.SetRoute): ExpressServer.SetRoute 
 }
 
 export function removeJWTCookies(res: Response) {
-   const option: CookieSerializeOptions = {
-      maxAge: 0
-   };
-   res.setHeader('Set-Cookie', [
-      cookie.serialize(Constant.cookies.jwtName, '', option),
-      cookie.serialize(Constant.cookies.refreshTokenName, '', option)
-   ]);
+   res.clearCookie(Constant.cookies.jwtName);
+   res.clearCookie(Constant.cookies.refreshTokenName);
 }

@@ -1,21 +1,23 @@
-import { defineRoute, Success, ThrowRequest } from '$utils/api';
-import { uploadMultipart } from '@/middlewares/multer';
 import { Request, Response } from 'express';
+import { Success, ThrowRequest, defineRoute } from '$utils/api';
+
+import { Api } from '@/types';
+import { Constant } from '$const/index';
+import { ErrorType } from '$const/errorTypes';
+import FileType from 'file-type';
+import { Msg } from '$const/msg';
+import { PostModel } from '$models/Post.model';
+import { devLog } from '$utils/devLog';
+import fs from 'fs/promises';
+import { mw_AuthNeeded } from '@/middlewares/auth';
 import { nanoid } from 'nanoid';
 import path from 'path';
-import fs from 'fs/promises';
-import FileType from 'file-type';
-import { Constant } from '$const/index';
+import { uploadMultipart } from '@/middlewares/multer';
 import { usePromise } from 'vierone';
-import { Msg } from '$const/msg';
-import { devLog } from '$utils/devLog';
-import { authGuard } from '@/middlewares/auth';
-import { PostModel } from '$models/Post.model';
-import { Api } from '@/types';
 
 export const setRoute = defineRoute(async (app, path) => {
    const mw = uploadMultipart.single('image');
-   app.post(path, authGuard, mw, Post);
+   app.post(path, mw_AuthNeeded, mw, Post);
 });
 
 enum Err {
@@ -25,9 +27,24 @@ enum Err {
    InvalidBuffer
 }
 
-const InvalidError = (res: Response) => ThrowRequest(res, 'UnsupportedMediaType', Msg.InvalidImageFile);
-const UnexpectedError = (res: Response) => ThrowRequest(res, 'InternalServerError', Msg.UnexpectedError);
-const PayloadTooLargeError = (res: Response) => ThrowRequest(res, 'PayloadTooLarge', Msg.PostImageSizeTooBig);
+const InvalidError = (res: Response) =>
+   ThrowRequest(res, {
+      status: 'UnsupportedMediaType',
+      message: Msg.InvalidImageFile,
+      type: ErrorType.InvalidImageFile
+   });
+const UnexpectedError = (res: Response) =>
+   ThrowRequest(res, {
+      status: 'InternalServerError',
+      message: Msg.UnexpectedError,
+      type: ErrorType.UnexpectedError
+   });
+const PayloadTooLargeError = (res: Response) =>
+   ThrowRequest(res, {
+      status: 'PayloadTooLarge',
+      message: Msg.PostImageSizeTooBig,
+      type: ErrorType.PostImageSizeTooBig
+   });
 
 async function checkFile(file?: Express.Multer.File) {
    const { maxImageSize, supportedMimeTypes } = Constant.post;
@@ -81,8 +98,8 @@ async function Post(req: Request, res: Response) {
    const { content = '' } = req.body as Api.CreatePostRequestBody;
    const post = new PostModel({
       content,
-      image: fileName,
-      postedBy: req.userID!
+      image: `${Constant.post.imgStartUrl}/${fileName}`,
+      postedBy: req.user!._id!
    });
 
    const [newPost, postSaveError] = await usePromise(post.save());

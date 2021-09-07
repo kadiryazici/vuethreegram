@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+   name: 'Page'
+};
+</script>
+
 <template>
    <div class="page">
       <slot />

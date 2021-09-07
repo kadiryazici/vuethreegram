@@ -11,6 +11,7 @@
       "skipLibCheck": true,
       "esModuleInterop": true,
       "lib": ["esnext", "dom"],
+      "useUnknownInCatchVariables": true,
       "paths": {
          "$types": ["../src/types.ts"],
          "$comp/*": ["./src/components/*"],

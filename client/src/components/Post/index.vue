@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+   name: 'Post'
+};
+</script>
+
 <script lang="ts" setup>
 import { Api } from '$types';
 import OptionsIcon from 'virtual:vite-icons/icon-park-outline/more';
@@ -6,6 +12,7 @@ interface Props {
    data: Api.PostResponse;
 }
 const props = defineProps<Props>();
+console.log(props);
 </script>
 
 <template>
@@ -16,7 +23,7 @@ const props = defineProps<Props>();
          <OptionsIcon class="post-icon" />
       </div>
       <div class="post-img">
-         <img :src="`postimg/${data.image}`" />
+         <img :src="data.image" />
       </div>
       <div class="post-footer">{{ data.content }}</div>
    </div>

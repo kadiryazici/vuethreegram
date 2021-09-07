@@ -1,5 +1,6 @@
 import { useContext } from 'vite-ssr/vue';
 import { onMounted, onUnmounted, Ref, ref, onDeactivated } from 'vue';
+import { makeFetch } from '/src/helpers/makeFetch';
 
 interface Config {
    fetchConfig: RequestInit;
@@ -16,7 +17,7 @@ export async function useAsyncData<T>(key: string, location: string, config?: Pa
    const responseValue = ref(initialState[key] || null) as Ref<T | null>;
    //- Axios get request
    const request = () =>
-      fetch(location, {
+      makeFetch<T>(location, {
          ...config?.fetchConfig,
          credentials: 'same-origin'
       });
@@ -24,11 +25,13 @@ export async function useAsyncData<T>(key: string, location: string, config?: Pa
    //- request handler function, to prevent code duplication I created inline function.
    const handler = async (type: 'server' | 'client') => {
       try {
-         const req = await request();
-         const data = (await req.json()) as T;
+         const [data, isError, response] = await request();
+         if (isError) throw { response, data };
+
          responseValue.value = data;
          if (type === 'server') initialState[key] = data;
       } catch (error) {
+         if (type === 'server') return;
          throw error;
       }
    };
