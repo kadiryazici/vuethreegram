@@ -1,6 +1,7 @@
-import { useContext } from 'vite-ssr/vue';
-import { onMounted, onUnmounted, Ref, ref, onDeactivated } from 'vue';
+import { Ref, onDeactivated, onMounted, onUnmounted, ref } from 'vue';
+
 import { makeFetch } from '/src/helpers/makeFetch';
+import { useContext } from 'vite-ssr/vue';
 
 interface Config {
    fetchConfig: RequestInit;

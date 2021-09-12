@@ -1,9 +1,9 @@
 POST http://localhost:3000/api/signup
 Content-Type: application/json
-X-CSRF-Token: o393Jlat-f_7iS-vP5nVpgxOSadDIwPf1koE
+X-CSRF-Token: NM3cnjgs-fPArd6lFP_-vbyb4gOe0UYXCH1I
 
 {
-   "username": "vierone",
+   "username": "kadir",
    "password": "123456"
 }
 ###   
@@ -19,4 +19,9 @@ X-CSRF-Token: djLMsWq5-K7DXHyCQhR4Jt3GYQpueNHxTfHw
 GET http://localhost:3000/api/csrf
 
 ###
-GET http://localhost:3000/user
+GET http://localhost:3000/api/posts/613516dccad24c3ca099b92a
+X-CSRF-Token: YzwZfTPI-dnfPSi_lA1zxWXd-OPMOxS5qotM
+
+###
+GET http://localhost:3000/api/user/kadir?page=1
+X-CSRF-Token: xxQAvrV7-Ud9TCwo4FhgtiWjQRcp-Ncg-low

@@ -1,6 +1,7 @@
 import { Handler, Response } from 'express';
 import { ThrowRequest, removeJWTCookies } from '$utils/api';
 import { createJWT, isExpired, isInvalid, verifyJWT } from '$utils/jwt';
+import { devLog, devLogError } from '$utils/devLog';
 
 import { Api } from '@/types';
 import { Constant } from '$const/index';
@@ -9,7 +10,6 @@ import { Msg } from '$const/msg';
 import { RefreshTokensModel } from '$models/RefreshTokens.model';
 import { UsersModel } from '$models/User.model';
 import cookie from 'cookie';
-import { devLog } from '$utils/devLog';
 import { usePromise } from 'vierone';
 
 const ThrowUnauthorized = (res: Response) =>
@@ -47,7 +47,10 @@ export const mw_AutoRefreshTokenAndPassUser: Handler = async (req, res, next) =>
    // check if tokens are invalid
    const isTokenInvalid = isInvalid(jwtError);
    const isRefreshInvalid = isInvalid(refJWTError);
-   if (isTokenInvalid || !jwtPayload?.id) {
+   if (isTokenInvalid) {
+      console.log({
+         isTokenInvalid
+      });
       return next();
    }
 
@@ -101,7 +104,7 @@ export const mw_AutoRefreshTokenAndPassUser: Handler = async (req, res, next) =>
       return next();
    }
 
-   const foundUser = await UsersModel.findOne({ _id: jwtPayload.id }).select('-password -__v').exec();
+   const foundUser = await UsersModel.findOne({ _id: jwtPayload!.id }).select('-password -__v').exec();
    if (!foundUser) {
       removeJWTCookies(res);
       return ThrowUnauthorized(res);
@@ -120,4 +123,15 @@ export const mw_AuthNeeded: Handler = (req, res, next) => {
       type: ErrorType.Unauthorized,
       status: 'Unauthorized'
    });
+};
+
+export const mw_NoAuthNeeded: Handler = (req, res, next) => {
+   if (req.user) {
+      return ThrowRequest(res, {
+         message: Msg.AuthError,
+         status: 'BadRequest',
+         type: ErrorType.AuthError
+      });
+   }
+   return next();
 };

@@ -1,9 +1,10 @@
-import { IsString, IsNotEmpty, Length, validateOrReject } from 'class-validator';
-import { Transform, classToPlain } from 'class-transformer';
-import { Constant } from '$const/index';
+import { IsNotEmpty, IsString, Length, validateOrReject } from 'class-validator';
 import { NoMultipleLength, TrimLength } from '$validators/customDecorators';
-import { serializeUsername } from '$utils/serializeUsername';
+import { Transform, classToPlain } from 'class-transformer';
+
 import { Api } from '@/types';
+import { Constant } from '$const/index';
+import { serializeUsername } from '$utils/serializeUsername';
 
 const { password, username } = Constant.user;
 export class UserDTO {

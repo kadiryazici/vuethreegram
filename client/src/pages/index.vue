@@ -8,23 +8,9 @@ import { ClientOnly } from 'vite-ssr/vue';
 
 let isError = $ref(false);
 let isLoading = $ref(true);
-let posts = $ref<Api.PostResponse[]>([]);
-onBeforeMount(fetchPosts);
-
-async function fetchPosts() {
-   const [data, fetchError, response] = await getPosts();
-   isLoading = false;
-   if (fetchError) {
-      if (data) {
-         console.error(data);
-      }
-      isError = true;
-      return;
-   }
-   if (Array.isArray(data)) {
-      posts = data;
-   }
-}
+const posts = await getPosts().catch(() => {
+   isError = true;
+});
 </script>
 <template>
    <Page>
@@ -33,8 +19,8 @@ async function fetchPosts() {
             Bir hata oldu
             <span @click="" class="text-violet-700 underline cursor-pointer" role="button">Tekrar Deneyin</span>
          </div>
-         <div v-if="isLoading">Yüklenmece...</div>
-         <Post v-for="post of posts" :data="post" :key="post._id" />
+         <div v-else-if="!posts">Yüklenmece...</div>
+         <Post v-else-if="Array.isArray(posts)" v-for="post of posts" :data="post" :key="post._id" />
       </ClientOnly>
    </Page>
 </template>

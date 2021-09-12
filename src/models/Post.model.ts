@@ -1,4 +1,5 @@
-import { model, Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
+
 import { IUSer } from './User.model';
 
 export interface IPost {

@@ -1,14 +1,26 @@
-import { viteSSR, useContext, Context } from 'vite-ssr/vue';
-import routes from 'virtual:generated-pages';
-import { createPinia } from 'pinia';
-import { createHead } from '@vueuse/head';
-import { middlewareHandler } from 'vite-ssr-middleware';
-
-import App from './App.vue';
 import 'virtual:windi.css';
+
+import { Context, useContext, viteSSR } from 'vite-ssr/vue';
+import { Middleware, middlewareHandler } from 'vite-ssr-middleware';
+
+import { Api } from '$types';
+import App from './App.vue';
+import { createHead } from '@vueuse/head';
+import { createPinia } from 'pinia';
+import { isBrowser } from '/src/helpers/isBrowser';
+import routes from 'virtual:generated-pages';
 import { useAuthStore } from '/src/stores/authStore';
 import { useMainStore } from '/src/stores/mainStore';
-import { Api } from '$types';
+
+const middlewares: Middleware[] = Object.values(import.meta.globEager('/src/middlewares/*.middleware.ts')).map((v) => {
+   return v.default as Middleware;
+});
+
+if (isBrowser()) {
+   console.log({
+      middlewares
+   });
+}
 
 const viteSSROptions: Parameters<typeof viteSSR>['1'] = {
    routes,
@@ -20,7 +32,8 @@ const viteSSROptions: Parameters<typeof viteSSR>['1'] = {
    }
 };
 
-export default viteSSR(App, viteSSROptions, async ({ app, request, response, initialState, router }) => {
+export default viteSSR(App, viteSSROptions, async (context) => {
+   const { app, request, response, initialState, router } = context;
    const head = createHead();
    const pinia = createPinia();
 
@@ -38,6 +51,7 @@ export default viteSSR(App, viteSSROptions, async ({ app, request, response, ini
       pinia.state.value = initialState.pinia;
    }
 
+   router.beforeEach(middlewareHandler(context, middlewares));
    app.use(head).use(pinia);
 
    return { head };

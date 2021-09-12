@@ -7,5 +7,6 @@ export async function makeFetch<T>(url: string, options?: FetchOptions): Promise
       isError = true;
    }
    const data = (await response.json()) as T;
+
    return [data, isError, response];
 }

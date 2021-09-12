@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { StateTree } from 'pinia';
+import { Pinia, StateTree } from 'pinia';
 
 declare module 'vite-ssr/vue/types' {
    export interface Context {
@@ -10,6 +10,12 @@ declare module 'vite-ssr/vue/types' {
          csrf: string;
          [key: string]: any;
       };
+   }
+}
+
+declare module 'vite-ssr-middleware' {
+   interface CustomProperties {
+      pinia: Pinia;
    }
 }
 

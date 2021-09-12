@@ -1,6 +1,6 @@
+import { Constant } from './constants';
 import { IUSer } from '$models/User.model';
 import { Server } from '.';
-import { Constant } from './constants';
 import nodeFetch from 'node-fetch';
 
 declare global {
@@ -76,5 +76,20 @@ export namespace Api {
    export interface LoginResponse {
       username: string;
       userID: string;
+   }
+   export interface IPostWithoutPopulate {
+      content?: string;
+      image: string;
+      likes: number[];
+      id: string;
+      postedBy: string;
+   }
+
+   export interface ProfileResponse {
+      user: UserResponse;
+      posts: IPostWithoutPopulate[];
+      totalCount: number;
+      currentPage: number;
+      totalPage: number;
    }
 }

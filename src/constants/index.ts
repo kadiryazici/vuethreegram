@@ -12,6 +12,9 @@ export const Constant = deepFreeze({
       password: {
          min: 6,
          max: 25
+      },
+      profile: {
+         postCountPerPage: 12
       }
    },
    token: {

@@ -5,7 +5,7 @@ import LoginOrSignupForm from '$comp/LoginOrSignupForm/index.vue';
 
 <template>
    <Page class="_page">
-      <LoginOrSignupForm type="login" />
+      <LoginOrSignupForm type="signup" />
    </Page>
 </template>
 

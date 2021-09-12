@@ -1,17 +1,19 @@
-import { Response, Request, Handler } from 'express';
-import { UsersModel } from '$models/User.model';
 import { Api, ExpressServer } from '@/types';
-import bcrypt from 'bcrypt';
+import { Handler, Request, Response } from 'express';
+import { Success, ThrowRequest, defineRoute } from '$utils/api';
+
 import { Constant } from '$const/index';
-import { validateAuthBody } from '$validators/user.validator';
-import { usePromise } from 'vierone';
-import { Msg } from '$const/msg';
-import { defineRoute, Success, ThrowRequest } from '$utils/api';
-import { csrfGuard } from '@/middlewares/csrf';
 import { ErrorType } from '$const/errorTypes';
+import { Msg } from '$const/msg';
+import { UsersModel } from '$models/User.model';
+import bcrypt from 'bcrypt';
+import { csrfGuard } from '@/middlewares/csrf';
+import { mw_NoAuthNeeded } from '@/middlewares/auth';
+import { usePromise } from 'vierone';
+import { validateAuthBody } from '$validators/user.validator';
 
 export const setRoute = defineRoute(async (app, path) => {
-   app.post(path, csrfGuard, Post());
+   app.post(path, mw_NoAuthNeeded, csrfGuard, Post());
 });
 
 function Post(): Handler {

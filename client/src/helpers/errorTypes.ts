@@ -6,5 +6,6 @@ export enum ErrorType {
    CSRFError,
    PostImageSizeTooBig,
    InvalidImageFile,
-   Error
+   Error,
+   NotFound
 }

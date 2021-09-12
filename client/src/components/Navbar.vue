@@ -13,14 +13,16 @@ import { RouterLink } from 'vue-router';
 import { useAuthStore } from '/src/stores/authStore';
 
 const authStore = useAuthStore();
+
+const profileIconTo = $computed(() => (authStore.isLogged ? `/profile/${authStore.userInfo!.username}` : '/login'));
 </script>
 
 <template>
    <div id="navbar">
       <RouterLink to="/upload" class="icon"><IconCamera /></RouterLink>
       <RouterLink to="/upload" class="invisible icon"><IconCamera /></RouterLink>
-      <RouterLink to="/" class="logo"><IconInstagram />Instagram</RouterLink>
-      <RouterLink :to="authStore.isLogged ? '/profile' : '/login'" class="icon"><IconMe /></RouterLink>
+      <RouterLink to="/" class="logo"><IconInstagram />Vuegram</RouterLink>
+      <RouterLink :to="profileIconTo" class="icon"><IconMe /></RouterLink>
       <RouterLink to="/" class="icon"><IconMSG /></RouterLink>
    </div>
 </template>

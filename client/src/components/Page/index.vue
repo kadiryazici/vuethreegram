@@ -13,7 +13,7 @@ export default {
 <style lang="scss" scoped>
 .page {
    @apply w-full
-         max-w-600px
+         max-w-[var(--page-max-width)]
          mx-auto;
 }
 </style>

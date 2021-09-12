@@ -7,6 +7,7 @@ export default {
 <script lang="ts" setup>
 import { Api } from '$types';
 import OptionsIcon from 'virtual:vite-icons/icon-park-outline/more';
+import { RouterLink } from 'vue-router';
 
 interface Props {
    data: Api.PostResponse;
@@ -18,7 +19,9 @@ console.log(props);
 <template>
    <div class="post">
       <div class="post-head">
-         <span class="post-username">{{ data.postedBy.username }}</span>
+         <RouterLink :to="`/profile/${data.postedBy.username}`" class="post-username">{{
+            data.postedBy.username
+         }}</RouterLink>
          <span class="post-date">{{ new Date(data.createdAt).toLocaleTimeString() }}</span>
          <OptionsIcon class="post-icon" />
       </div>

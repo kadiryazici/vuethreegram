@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import axios from 'axios';
 import { RouterView } from 'vue-router';
 import Navbar from '/src/components/Navbar.vue';
 </script>
@@ -15,6 +14,11 @@ import Navbar from '/src/components/Navbar.vue';
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap');
+
+:root {
+   --page-max-width: 600px;
+}
+
 * {
    font-family: 'Lexend Deca', sans-serif !important;
 }
