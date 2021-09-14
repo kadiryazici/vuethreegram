@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Success, ThrowRequest, defineRoute } from '$utils/api';
+import { ThrowRequest, defineRoute } from '$utils/api';
 
 import { Api } from '@/types';
 import { Constant } from '$const/index';

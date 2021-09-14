@@ -22,5 +22,5 @@
       }
    },
    "include": ["src/**/*"],
-   "exclude": ["client", "dist", "scripts", ".vscode", "node_modules/**/*"]
+   "exclude": ["client", "dist", "scripts", ".vscode", "node_modules/"]
 }

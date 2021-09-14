@@ -4,8 +4,20 @@ export default {
 };
 </script>
 
+<script lang="ts" setup>
+interface Props {
+   maxWidth?: number;
+}
+
+const props = defineProps<Props>();
+const propCustomWidth = $computed(() => {
+   if (!props.maxWidth || typeof props.maxWidth !== 'number') return null;
+   return `--page-max-width: ${props.maxWidth}px`;
+});
+</script>
+
 <template>
-   <div class="page">
+   <div :style="[propCustomWidth]" class="page">
       <slot />
    </div>
 </template>

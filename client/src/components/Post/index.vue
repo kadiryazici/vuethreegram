@@ -13,7 +13,6 @@ interface Props {
    data: Api.PostResponse;
 }
 const props = defineProps<Props>();
-console.log(props);
 </script>
 
 <template>
@@ -22,11 +21,13 @@ console.log(props);
          <RouterLink :to="`/profile/${data.postedBy.username}`" class="post-username">{{
             data.postedBy.username
          }}</RouterLink>
-         <span class="post-date">{{ new Date(data.createdAt).toLocaleTimeString() }}</span>
+         <RouterLink :to="`/post/${data._id}`" class="post-date">{{
+            new Date(data.createdAt).toLocaleTimeString()
+         }}</RouterLink>
          <OptionsIcon class="post-icon" />
       </div>
-      <div class="post-img">
-         <img :src="data.image" />
+      <div class="post-img-wrapper">
+         <img class="post-img" :src="data.image" />
       </div>
       <div class="post-footer">{{ data.content }}</div>
    </div>
@@ -38,11 +39,12 @@ console.log(props);
 
    &-head {
       @apply px-4 py-2 flex items-center;
+
       .post-username {
          @apply mr-auto text-size-13px font-bold cursor-pointer hover:(underline);
       }
       .post-date {
-         @apply text-size-12px mr-2 text-gray-400;
+         @apply text-size-12px mr-2 text-gray-400 hover:(underline);
       }
       .post-icon {
          @apply text-size-30px  
@@ -52,7 +54,11 @@ console.log(props);
             rounded-full;
       }
    }
-   &-img {
+
+   &-img-wrapper {
+      .post-img {
+         @apply mx-auto w-full;
+      }
    }
 
    &-footer {
